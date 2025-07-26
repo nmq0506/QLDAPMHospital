@@ -1,0 +1,19 @@
+.specialty-card {
+    border: none;
+    border-radius: 10px;
+    padding: 20px;
+    background-color: #f8f9fa;
+    transition: transform 0.2s;
+}
+.specialty-card:hover {
+    transform: scale(1.03);
+}
+.specialty-icon {
+    width: 80px;
+    height: 80px;
+    margin-bottom: 15px;
+}
+.search-box {
+    max-width: 500px;
+    margin: auto;
+}
