@@ -55,5 +55,26 @@ def user_register():
 @app.route("/")
 def index():
     return render_template("User/home.html")
+
+@app.route('/specialties')
+def specialties():
+    kw = request.args.get('kw')
+    specialties = dao.load_specialties(kw)
+    return render_template("User/specialties.html", specialties=specialties, kw=kw)
+
+
+@app.route('/doctors')
+def doctors():
+    kw = request.args.get('kw')
+    specialty_id = request.args.get('specialty_id')
+    hospital_id = request.args.get('hospital_id')
+    degree = request.args.get('degree')
+    doctors = dao.get_doctors(kw ,specialty_id, hospital_id, degree)
+    specialties = dao.load_specialties()
+    hospitals = dao.load_hospital()
+    return render_template("User/doctors.html", kw=kw, specialty_id=specialty_id,
+                           hospital_id=hospital_id, doctors=doctors, degree=degree, specialties=specialties,
+                           hospitals=hospitals)
+
 if "__main__" == __name__:
     app.run(debug=True,port=8080)

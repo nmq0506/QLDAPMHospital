@@ -1,12 +1,7 @@
 import datetime
 import hashlib
-from app import models
-from flask_login import current_user, logout_user, login_user
-from sqlalchemy import func
-from sqlalchemy.sql import extract
 from app.models import User,UserRole
 from app import app, db
-from datetime import datetime, timedelta
 
 def get_user_by_id(id):
     return User.query.get(id)
