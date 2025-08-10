@@ -22,6 +22,9 @@ def get_doctors(kw=None, spec_id=None, hospital_id=None, degree=None):
         query = query.filter(Doctor.certificate==degree)
     return query.all()
 
+def get_doctor_by_id(doctor_id):
+    return Doctor.query.get(doctor_id)
+
 def load_hospital():
     return Hospital.query.all()
 
