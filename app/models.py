@@ -23,13 +23,9 @@ class PaymentStatus(PyEnum):
     SUCCESS = 2
     FAILED = 3
 
-
-
-
 class User(db.Model, UserMixin):
     id = Column(Integer, primary_key=True, autoincrement=True)
     name = Column(String(50), nullable=False)
-    avatar = Column(String(100))
     username = Column(String(50), nullable=False, unique=True)
     password = Column(String(50), nullable=False)
     phone = Column(String(50), nullable=False, unique=True)
@@ -40,19 +36,25 @@ class User(db.Model, UserMixin):
     appointments = relationship('AppointmentSchedule', backref='user', lazy=True)
     reviews = relationship('Review', backref='user_review', lazy=True)
 
-
-
     def __str__(self):
         return self.name
-
 
 
 class Hospital(db.Model):
     id = Column(Integer, primary_key=True, autoincrement=True)
     name = Column(String(50), nullable=False)
     location = Column(String(50), nullable=False)
-    doctors = relationship('Doctor', backref= 'hospital', lazy=True)
+    doctors = relationship('Doctor', backref= 'app', lazy=True)
 
+
+    def __str__(self):
+        return self.name
+
+class Specialty(db.Model):
+    id = Column(Integer, primary_key=True, autoincrement=True)
+    name = Column(String(50), nullable=False)
+    image = Column(String(255), nullable=False)
+    doctors = relationship('Doctor', backref='specialty', lazy=True)
 
     def __str__(self):
         return self.name
@@ -60,8 +62,10 @@ class Hospital(db.Model):
 class Doctor(db.Model):
     id = Column(Integer, ForeignKey(User.id), primary_key=True)
     name = Column(String(50), nullable=False)
+    avatar = Column(String(100))
+    description = Column(String(255), nullable=False)
     certificate = Column(String(50), nullable=False)
-    specialty = Column(String(50), nullable=False)
+    specialty_id = Column(Integer, ForeignKey(Specialty.id), nullable=False)
     experience_years = Column(Integer,nullable=False)
     time_start = Column(DateTime, nullable=False)
     time_end = Column(DateTime, nullable=False)
@@ -127,3 +131,112 @@ if __name__ == '__main__':
         #          user_role=UserRole.USER)
         # db.session.add(u)
         # db.session.commit()
+        # specialties = [{
+        #     'name': 'Khoa nhi',
+        #     'image': 'https://res.cloudinary.com/ds4oggqzq/image/upload/v1753479547/khoa_ngo%E1%BA%A1i_nhi_smutnx.png'
+        # }, {
+        #     'name': 'Khoa sản phụ',
+        #     'image': 'https://res.cloudinary.com/ds4oggqzq/image/upload/v1753479547/Khoa_s%E1%BA%A3n_al9enx.png'
+        # }, {
+        #     'name': 'Khoa mắt',
+        #     'image': 'https://res.cloudinary.com/ds4oggqzq/image/upload/v1753479554/khoa_m%E1%BA%AFt_lgnxch.png'
+        # }, {
+        #     'name': 'Khoa y học cổ truyền',
+        #     'image': 'https://res.cloudinary.com/ds4oggqzq/image/upload/v1753479548/Khoa_y_h%E1%BB%8Dc_c%E1%BB%95_truy%E1%BB%81n_cc59bi.png'
+        # }, {
+        #     'name': 'Khoa tim mạch',
+        #     'image': 'https://res.cloudinary.com/ds4oggqzq/image/upload/v1753479547/khoa_tim_m%E1%BA%A1ch_e4fgfk.png'
+        # }, {
+        #     'name': 'Khoa da liễu',
+        #     'image': 'https://res.cloudinary.com/ds4oggqzq/image/upload/v1753479547/da_li%E1%BB%85u_dfp3rc.png'
+        # }, {
+        #     'name': 'Khoa răng hàm mặt',
+        #     'image': 'https://res.cloudinary.com/ds4oggqzq/image/upload/v1753479548/r%C4%83ng_h%C3%A0m_m%E1%BA%B7t_soy0of.png'
+        # }, {
+        #     'name': 'Khoa tâm thần',
+        #     'image': 'https://res.cloudinary.com/ds4oggqzq/image/upload/v1753479549/th%E1%BA%A7n_kinh_ucks8c.png'
+        # }, {
+        #     'name': 'Khoa ngoại tổng hợp',
+        #     'image': 'https://res.cloudinary.com/ds4oggqzq/image/upload/v1753479548/khoa_ngo%E1%BA%A1i_t%E1%BB%95ng_h%E1%BB%A3p_qa7ufy.png'
+        # }]
+        # for s in specialties:
+        #     specialty = Specialty(**s)
+        #     db.session.add(specialty)
+        # db.session.commit()
+        # users = [{
+        #     'name': 'Lê Hữu Nguyện',
+        #     'username': 'nsio9',
+        #     'password': hashlib.md5('123456'.encode('utf-8')).hexdigest(),
+        #     'phone': '0123452as',
+        #     'email': 'nsio9@gmail.com',
+        #     'user_role': 'user'
+        # }, {
+        #     'name': 'Nguyễn Tài Hiếu',
+        #     'username': 'Hiu',
+        #     'password': hashlib.md5('123456'.encode('utf-8')).hexdigest(),
+        #     'phone': '012345222a2',
+        #     'email': 'hiu@gmail.com',
+        #     'user_role': 'user'
+        # }]
+        # for u in users:
+        #     user = User(**u)
+        #     db.session.add(user)
+        # db.session.commit()
+
+        # doctors = [{
+        #     'id': 1,
+        #     'name': 'Lê Tấn Sơn',
+        #     'avatar': 'https://res.cloudinary.com/ds4oggqzq/image/upload/v1753538716/sonlt_g7xedr.jpg',
+        #     'certificate': 'PGS.TS',
+        #     'specialty_id': 1,
+        #     'hospital_id': 1,
+        #     'time_start': datetime.now(),
+        #     'time_end': datetime.now(),
+        #     'experience_years': 20,
+        #     'description': 'Cố vấn chuyên môn Khoa Ngoại Nhi'
+        # }, {
+        #     'id': 2,
+        #     'name': 'Nguyễn Đức Tuấn',
+        #     'avatar': 'https://res.cloudinary.com/ds4oggqzq/image/upload/v1753540213/tuannd_ynmsle.jpg',
+        #     'certificate': 'PGS.TS',
+        #     'specialty_id': 2,
+        #     'hospital_id': 1,
+        #     'time_start': datetime.now(),
+        #     'time_end': datetime.now(),
+        #     'experience_years': 11,
+        #     'description': 'Chuyên viên khoa sản phụ'
+        # }]
+        # for doctor in doctors:
+        #     doctor = Doctor(**doctor)
+        #     db.session.add(doctor)
+        # db.session.commit()
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

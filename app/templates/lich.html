@@ -1,0 +1,340 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Lịch Làm Việc </title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+{% if appointments_doctor %}
+
+<div class="schedule-container">
+    <div class="update-form">
+        <h3>Cập nhật lịch trình</h3>
+        <form id="scheduleForm">
+            <input type="text" id="eventTitle" placeholder="Tên sự kiện" required>
+            <select id="eventDay" required>
+                <option value="2">Thứ 2</option>
+                <option value="3">Thứ 3</option>
+                <option value="4">Thứ 4</option>
+                <option value="5">Thứ 5</option>
+                <option value="6">Thứ 6</option>
+                <option value="7">Thứ 7</option>
+            </select>
+            <select id="startTime" required>
+            </select>
+            <select id="endTime" required>
+            </select>
+            <select id="eventType" required>
+                <option value="event-blue">Khám bệnh</option>
+                <option value="event-red">Phẫu thuật</option>
+                <option value="event-green">Trực</option>
+                <option value="event-grey">Khác</option>
+            </select>
+            <button type="submit">Thêm/Cập nhật</button>
+            <button type="button" id="clearButton">Xóa lịch đã chọn</button>
+        </form>
+    </div>
+
+    <table>
+        <thead>
+        <tr>
+            <th class="time-col"></th>
+            <th>Thứ 2</th>
+            <th>Thứ 3</th>
+            <th>Thứ 4</th>
+            <th>Thứ 5</th>
+            <th>Thứ 6</th>
+            <th>Thứ 7</th>
+            <th>Chủ Nhật</th>
+        </tr>
+        </thead>
+        <tbody id="scheduleBody">
+        </tbody>
+    </table>
+</div>
+
+
+</body>
+</html>
+<style>
+
+/* =================================
+   CÀI ĐẶT CHUNG & BỐ CỤC
+   ================================= */
+body {
+    font-family: Arial, sans-serif;
+    background-color: #f4f4f4;
+    color: #333;
+    margin: 20px;
+}
+
+.schedule-container {
+    width: 100%;
+    max-width: 1400px;
+    margin: auto;
+    border: 1px solid #ddd;
+    background-color: #fff;
+    overflow: hidden; /* Giúp bo tròn góc đẹp hơn */
+}
+
+.schedule-header {
+    padding: 10px 15px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-bottom: 1px solid #ddd;
+}
+
+/* =================================
+   FORM CẬP NHẬT
+   ================================= */
+.update-form {
+    padding: 15px;
+    background-color: #f9f9f9;
+    border-bottom: 1px solid #ddd;
+}
+
+.update-form h3 {
+    margin-top: 0;
+    margin-bottom: 15px;
+}
+
+#scheduleForm {
+    display: flex;
+    gap: 10px;
+    flex-wrap: wrap;
+    align-items: center;
+}
+
+#scheduleForm input,
+#scheduleForm select,
+#scheduleForm button {
+    padding: 8px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    font-size: 13px;
+}
+
+#scheduleForm button {
+    cursor: pointer;
+    background-color: #e9e9e9;
+}
+
+/* =================================
+   BẢNG LỊCH TRÌNH
+   ================================= */
+table {
+    width: 100%;
+    border-collapse: collapse;
+    table-layout: fixed;
+}
+
+th, td {
+    border: 1px solid #e0e0e0;
+    text-align: center;
+    font-size: 13px;
+}
+
+/* Tiêu đề các cột ngày */
+thead th {
+    background-color: #f9f9f9;
+    padding: 10px 5px;
+    font-weight: bold;
+    vertical-align: middle;
+}
+
+/* Cột thời gian bên trái */
+.time-col {
+    width: 80px; /* Giảm nhẹ chiều rộng để gọn hơn */
+    background-color: #f9f9f9;
+    font-weight: bold;
+    padding: 3px 5px;
+    vertical-align: middle;
+}
+
+/* Các ô trong thân bảng (đã thu hẹp) */
+tbody td {
+    padding: 3px 5px;
+    vertical-align: top; /* Căn nội dung lên trên theo mặc định */
+}
+
+/* =================================
+   KHỐI SỰ KIỆN & NGÀY NGHỈ
+   ================================= */
+.event {
+    padding: 4px 8px; /* Padding đã được thu hẹp */
+    text-align: left;
+    color: #333;
+    font-size: 12px;
+    line-height: 1.3;
+    border-radius: 4px;
+    height: 100%; /* Giúp khối sự kiện lấp đầy ô */
+}
+
+.event strong {
+    font-weight: bold;
+    display: block;
+    margin-bottom: 4px;
+}
+
+/* Các loại màu sự kiện */
+.event-blue {
+    background-color: #eaf3fb;
+    border: 1px solid #b7d6f5;
+}
+
+.event-red {
+    background-color: #fdeaea;
+    border: 1px solid #f5b7b7;
+}
+
+.event-green {
+    background-color: #eafbf1;
+    border: 1px solid #b7f5c7; /* Sửa lỗi cú pháp dấu hai chấm thừa */
+}
+
+.event-grey {
+    background-color: #f0f0f0;
+    border: 1px solid #dcdcdc;
+}
+
+/* Định dạng cho ngày nghỉ */
+.day-off {
+    background-color: #f8f9fa;
+    color: #b0b0b0;
+    font-size: 1.5em;
+    font-weight: bold;
+    vertical-align: middle; /* Căn giữa nội dung cho ngày nghỉ */
+}
+</style>
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+    const scheduleBody = document.getElementById('scheduleBody');
+    const form = document.getElementById('scheduleForm');
+    const clearButton = document.getElementById('clearButton');
+    const startTimeSelect = document.getElementById('startTime');
+    const endTimeSelect = document.getElementById('endTime');
+
+    const timeSlots = [
+       "06:30", "06:45", "07:00", "07:15", "07:30", "07:45", "08:00", "08:15", "08:30", "08:45",
+       "09:00", "09:15", "09:30", "09:45", "10:00", "10:15", "10:30", "10:45", "11:00", "12:00", "12:15", "12:30", "12:45", "13:00", "13:15", "13:30", "13:45",
+       "14:00", "14:15", "14:30", "14:45", "15:00", "15:15", "15:30", "15:45", "16:00", "16:15",
+       "16:30", "16:45", "17:00"
+    ];
+
+    // Sửa lỗi: Tự động lấy đúng tổng số mốc thời gian
+    const totalTimeSlots = timeSlots.length;
+    const days = 7; // Thứ 2 đến Chủ Nhật
+
+    // --- KHỞI TẠO BẢNG VÀ CÁC LỰA CHỌN THỜI GIAN ---
+    function initializeSchedule() {
+        scheduleBody.innerHTML = '';
+
+        // Tạo các hàng và ô
+        for (let i = 0; i < totalTimeSlots; i++) {
+            const row = document.createElement('tr');
+            const timeIndex = i + 1; // Index bắt đầu từ 1 cho ID
+
+            // Cột thời gian (đã bỏ chữ "Tiết")
+            const timeCell = document.createElement('td');
+            timeCell.className = 'time-col';
+            timeCell.textContent = timeSlots[i]; // Chỉ hiển thị thời gian
+            row.appendChild(timeCell);
+
+            // Các cột ngày
+            for (let day = 2; day <= days + 1; day++) { // 2=Thứ 2, ..., 8=CN
+                const cell = document.createElement('td');
+                // ID duy nhất: cell-day-index. Vd: cell-2-1
+                cell.id = `cell-${day}-${timeIndex}`;
+                row.appendChild(cell);
+            }
+            scheduleBody.appendChild(row);
+        }
+
+        // Tạo ô Chủ Nhật là ngày nghỉ
+        const sundayCell = document.getElementById('cell-8-1');
+        sundayCell.setAttribute('rowspan', totalTimeSlots);
+        sundayCell.className = 'day-off';
+        sundayCell.textContent = 'NGHỈ';
+        for (let i = 2; i <= totalTimeSlots; i++) {
+            document.getElementById(`cell-8-${i}`).remove();
+        }
+
+        // Tạo các lựa chọn thời gian cho form (đã bỏ chữ "Tiết")
+        for (let i = 0; i < totalTimeSlots; i++) {
+            const timeIndex = i + 1;
+            startTimeSelect.innerHTML += `<option value="${timeIndex}">${timeSlots[i]}</option>`;
+            endTimeSelect.innerHTML += `<option value="${timeIndex}">${timeSlots[i]}</option>`;
+        }
+    }
+
+    // --- HÀM THÊM/CẬP NHẬT SỰ KIỆN ---
+    function updateSchedule(event) {
+        event.preventDefault();
+
+        const title = document.getElementById('eventTitle').value;
+        const day = document.getElementById('eventDay').value;
+        const startIndex = parseInt(document.getElementById('startTime').value);
+        const endIndex = parseInt(document.getElementById('endTime').value);
+        const type = document.getElementById('eventType').value;
+
+        if (startIndex > endIndex) {
+            alert('Thời gian kết thúc phải sau thời gian bắt đầu!');
+            return;
+        }
+
+        clearSchedule(day, startIndex, endIndex);
+
+        const duration = endIndex - startIndex + 1;
+        const startCell = document.getElementById(`cell-${day}-${startIndex}`);
+        if (startCell) {
+            startCell.setAttribute('rowspan', duration);
+            startCell.className = `event ${type}`;
+            startCell.innerHTML = `<strong>${title}</strong>`;
+
+            for (let i = 1; i < duration; i++) {
+                const cellToHide = document.getElementById(`cell-${day}-${startIndex + i}`);
+                if (cellToHide) {
+                    cellToHide.style.display = 'none';
+                }
+            }
+        }
+        form.reset();
+    }
+
+    // --- HÀM XÓA SỰ KIỆN ---
+    function clearSchedule(day, startIndex, endIndex) {
+        for (let i = startIndex; i <= endIndex; i++) {
+            const cell = document.getElementById(`cell-${day}-${i}`);
+            if (cell) {
+                cell.style.display = '';
+                cell.removeAttribute('rowspan');
+                cell.className = '';
+                cell.innerHTML = '';
+            }
+        }
+    }
+
+    // --- GẮN SỰ KIỆN ---
+    form.addEventListener('submit', updateSchedule);
+
+    clearButton.addEventListener('click', function() {
+        const day = document.getElementById('eventDay').value;
+        const startIndex = parseInt(document.getElementById('startTime').value);
+        const endIndex = parseInt(document.getElementById('endTime').value);
+
+        // Cập nhật thông báo xác nhận để hiển thị giờ
+        const startTimeStr = timeSlots[startIndex - 1];
+        const endTimeStr = timeSlots[endIndex - 1];
+
+        if (confirm(`Bạn có chắc muốn xóa lịch từ ${startTimeStr} đến ${endTimeStr} của ngày đã chọn?`)) {
+            clearSchedule(day, startIndex, endIndex);
+        }
+    });
+
+    // --- CHẠY HÀM KHỞI TẠO KHI TRANG TẢI XONG ---
+    initializeSchedule();
+});
+</script>

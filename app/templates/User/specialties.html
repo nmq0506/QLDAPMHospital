@@ -1,0 +1,31 @@
+{% extends 'layout/base.html' %}
+
+{% block title %}
+<title>Danh sách chuyên khoa</title>
+{% endblock %}
+
+{% block content %}
+<link rel="stylesheet" href="{{ url_for('static', filename='css/specialties.css') }}">
+
+<div class="text-center my-4">
+  <form method="get" action="{{ url_for('specialties') }}" class="search-box input-group mb-3">
+    <input type="text" class="form-control" placeholder="Tìm chuyên khoa" name="kw" value="{{ kw if kw else '' }}">
+    <button class="btn btn-outline-secondary" type="submit">
+      <i class="bi bi-search"></i>
+    </button>
+  </form>
+  <h3 class="fw-bold text-primary">DANH SÁCH CHUYÊN KHOA</h3>
+  <hr class="w-25 mx-auto">
+</div>
+
+<div class="row">
+  {% for specialty in specialties %}
+  <div class="col-md-3 mb-4">
+    <div class="text-center specialty-card shadow-sm h-100">
+      <img src="{{ specialty.image }}" alt="Icon" class="specialty-icon">
+      <h6 class="fw-bold">{{ specialty.name }}</h6>
+    </div>
+  </div>
+  {% endfor %}
+</div>
+{% endblock %}

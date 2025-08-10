@@ -1,0 +1,42 @@
+/* General Form Styling */
+body { font-family: sans-serif; padding: 2em; }
+.form-group { margin-bottom: 1.5em; }
+label { display: block; margin-bottom: 0.5em; font-weight: bold; }
+input[type="text"], select, textarea { width: 100%; padding: 8px; border-radius: 4px; border: 1px solid #ccc; box-sizing: border-box; }
+.submit-btn { background-color: #007bff; color: white; padding: 10px 15px; border: none; border-radius: 5px; cursor: pointer; font-size: 16px; }
+.submit-btn:hover { background-color: #0056b3; }
+
+
+/* Styling for Time Slot Ovals */
+#time-slots-container {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px; /* Spacing between ovals */
+}
+
+/* Hide the actual radio button */
+.time-slot-radio {
+    display: none;
+}
+
+/* Style the label to look like a button/oval */
+.time-slot-label {
+    display: inline-block;
+    padding: 10px 25px;
+    border: 2px solid #555;
+    border-radius: 50px; /* This creates the oval shape */
+    cursor: pointer;
+    transition: all 0.2s ease-in-out;
+}
+
+/* Style for when the radio button is checked (i.e., the time is selected) */
+.time-slot-radio:checked + .time-slot-label {
+    background-color: #007bff;
+    color: white;
+    border-color: #007bff;
+}
+
+/* Hover effect for unselected ovals */
+.time-slot-label:hover {
+    background-color: #f0f0f0;
+}
