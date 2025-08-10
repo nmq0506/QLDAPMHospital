@@ -1,6 +1,6 @@
 import datetime
 import hashlib
-from app.models import User,UserRole
+from app.models import User, UserRole, Doctor
 from app import app, db
 
 def get_user_by_id(id):
@@ -14,8 +14,18 @@ def add_user(name, username, password, user_role,phone,email, **kwargs):
     user = User(name=name,
                 username=username,
                 password=str(hashlib.md5(password.strip().encode('utf-8')).hexdigest()),
-                avatar=kwargs.get('avatar'),
                 user_role=UserRole.USER,
+                phone= phone,
+                email=email
+                )
+    db.session.add(user)
+    db.session.commit()
+
+def add_doctor(name, username, password, user_role,phone,email, **kwargs):
+    user = User(name=name,
+                username=username,
+                password=str(hashlib.md5(password.strip().encode('utf-8')).hexdigest()),
+                user_role=UserRole.DOCTOR,
                 phone= phone,
                 email=email
                 )
