@@ -93,8 +93,7 @@ def create_appointment(new_appointment):
     db.session.commit()
 
 
-import data,json
-from app.models import Specialty, Doctor, Hospital
+
 
 
 def load_specialties(kw=None):
@@ -124,10 +123,10 @@ def load_hospital():
     return Hospital.query.all()
 
 
-def auth_user(username, password):
-    with open("data/data.json", encoding="utf-8") as f:
-        users= json.load(f)
-        for u in users:
-            if u["username"]==username and u["password"]== password:
-                return True
-    return False
+# def auth_user(username, password):
+#     with open("data/data.json", encoding="utf-8") as f:
+#         users= json.load(f)
+#         for u in users:
+#             if u["username"]==username and u["password"]== password:
+#                 return True
+#     return False

@@ -23,13 +23,17 @@ class PaymentStatus(PyEnum):
     SUCCESS = 2
     FAILED = 3
 
-
+class CertificateEnum(PyEnum):
+    PGS_TS = 'PGS.TS'
+    TS = 'TS'
+    THS = 'ThS'
+    BS_CKII = 'BS.CKII'
+    BS_CKI = 'BS.CKI'
 
 
 class User(db.Model, UserMixin):
     id = Column(Integer, primary_key=True, autoincrement=True)
     name = Column(String(50), nullable=False)
-    avatar = Column(String(100))
     username = Column(String(50), nullable=False, unique=True)
     password = Column(String(50), nullable=False)
     phone = Column(String(50), nullable=False, unique=True)
@@ -40,11 +44,8 @@ class User(db.Model, UserMixin):
     appointments = relationship('AppointmentSchedule', backref='user', lazy=True)
     reviews = relationship('Review', backref='user_review', lazy=True)
 
-
-
     def __str__(self):
         return self.name
-
 
 
 class Hospital(db.Model):
@@ -52,6 +53,7 @@ class Hospital(db.Model):
     name = Column(String(50), nullable=False)
     location = Column(String(50), nullable=False)
     doctors = relationship('Doctor', backref= 'hospital', lazy=True)
+
 
     def __str__(self):
         return self.name
@@ -67,17 +69,15 @@ class Specialty(db.Model):
 
 class Doctor(db.Model):
     id = Column(Integer, ForeignKey(User.id), primary_key=True)
-    name = Column(String(50), nullable=False)
     avatar = Column(String(100))
     description = Column(String(255), nullable=False)
-    certificate = Column(String(50), nullable=False)
+    certificate = Column(Enum(CertificateEnum), default=CertificateEnum.THS)
     specialty_id = Column(Integer, ForeignKey(Specialty.id), nullable=False)
     experience_years = Column(Integer,nullable=False)
-    time_start = Column(DateTime, nullable=False)
-    time_end = Column(DateTime, nullable=False)
     hospital_id = Column(Integer, ForeignKey(Hospital.id),nullable=False)
     appointments = relationship('AppointmentSchedule', backref='doctor', lazy=True)
     reviews = relationship('Review', backref='doctor', lazy=True)
+    # schedules = relationship('DoctorSchedule', backref='doctor', lazy=True)
 
     @property
     def name(self):
@@ -95,8 +95,6 @@ class Review(db.Model):
     created_date = Column(DateTime, default=datetime.now())
     user_id = Column(Integer,ForeignKey(User.id), nullable=False)
     doctor_id = Column(Integer,ForeignKey(Doctor.id),nullable=False)
-
-
 
 class Patient(db.Model):
     id = Column(Integer, primary_key=True, autoincrement=True)
@@ -138,11 +136,11 @@ class Payment(db.Model):
 
 if __name__ == '__main__':
     with app.app_context():
-        # db.create_all()
-        u = User(name='Quân', username='mq', password=str(hashlib.md5('123456'.encode('utf-8')).hexdigest()),phone='0123456789',email='123@gmail.com',
-                 user_role=UserRole.ADMIN)
-        db.session.add(u)
-        db.session.commit()
+        db.create_all()
+        # u = User(name='Quân', username='mq', password=str(hashlib.md5('123456'.encode('utf-8')).hexdigest()),phone='0123456789',email='123@gmail.com',
+        #          user_role=UserRole.USER)
+        # db.session.add(u)
+        # db.session.commit()
         # specialties = [{
         #     'name': 'Khoa nhi',
         #     'image': 'https://res.cloudinary.com/ds4oggqzq/image/upload/v1753479547/khoa_ngo%E1%BA%A1i_nhi_smutnx.png'
@@ -244,18 +242,7 @@ if __name__ == '__main__':
         #     'specialty_id': 1,
         #     'hospital_id': 1,
         #     'experience_years': 20,
-        #     'description': 'Cố vấn chuyên môn Khoa Ngoại Nhi',
-        #     'fullavatar':'https://tamanhhospital.vn/wp-content/uploads/2025/05/bs-le-tan-son.png',
-        #     'details':'-Hơn 40 năm công tác trong ngành y, PGS.TS.BS Lê Tấn Sơn là một trong những chuyên gia hàng đầu trong lĩnh vực Ngoại Nhi tại Việt Nam, đồng thời đặt nền móng cho phẫu thuật Tiết niệu Nhi.'
-        #               '-Năm 1979, PGS.TS.BS Lê Tấn Sơn tốt nghiệp chuyên ngành Bác sĩ Ngoại khoa hệ chính quy, Đại học Y Dược TP.HCM và được giữ lại trường giảng dạy bộ môn Phẫu thuật Nhi (được thành lập từ tháng 5 năm 1979). Thời điểm đó cơ sở vật chất, trang thiết bị, tài liệu chuyên môn của chuyên ngành này vẫn còn rất thiếu thốn, ông phải tự mày mò, nghiên cứu và học hỏi thêm.'
-        #     '-Năm 1994, PGS.TS.BS Lê Tấn Sơn sang Pháp tu nghiệp và công tác tại khoa Ngoại Nhi, bệnh viện Edouard Herriot với vai trò bác sĩ nội trú. Năm 1998 – 1999 Phó Giáo sư tiếp tục đi tu nghiệp lần hai tại đây với vị trí bác sĩ chức năng. Tại đây, Phó Giáo sư đã được tiếp cận và học hỏi một lĩnh vực hoàn toàn mới là phẫu thuật Tiết niệu – Sinh dục Nhi. Sau đó, tiếp tục trau dồi và nâng cao kiến thức và thực hành với các chuyên gia đến từ Hoa Kỳ và về Việt Nam chia sẻ kinh nghiệm tại các bệnh viện thành phố Nha Trang, Long Xuyên, Đà Nẵng…'
-        #     '-Năm 1980 – 2010, Phó Giáo sư kiêm nhiệm vị trí bác sĩ điều trị phẫu thuật viên tại Bệnh viện Nhi Đồng I, Trưởng Khoa Niệu tại Bệnh viện Nhi Đồng II từ năm 2011-2015, sau đó đảm nhận vai trò cố vấn chuyên môn cho khoa trong khoảng thời gian 2018 – 2021.'
-        #     '-Năm 2007, PGS.TS.BS Lê Tấn Sơn hoàn thành luận văn Tiến sĩ với đề tài phẫu thuật thành công cho một bệnh nhi bị dị dạng ống tầng sinh môn (rò hậu môn – tiền đình âm đạo) chỉ với 1 lần mổ duy nhất (trước đó phải mổ ít nhất 3 lần). Phó Giáo sư là người đầu tiên tại Việt Nam thực hiện thành công kỹ thuật mổ này và ứng dụng cho đến thời điểm hiện tại. Năm 2010, ông được nhà nước Việt Nam phong tặng danh hiệu Giảng viên cao cấp, đồng thời trở thành Phó Giáo sư.'
-        #     '-Tháng 4/2007, PGS.TS.BS Lê Tấn Sơn trở thành thực tập sinh cao cấp tại khoa Nhi – Tiết niệu, Bệnh viện Primary Children’s Medical Center, Mỹ. Tháng 5/2007, tiếp tục giữ vai trò thực tập sinh cao cấp tại khoa Nhi – Tiết niệu, Bệnh viện Nhi Khoa Boston, Mỹ.'
-        #     '-PGS.TS.BS Lê Tấn Sơn còn là tác giả của 90 bài báo cáo khoa học đăng trên các tạp chí Y khoa lớn trong và ngoài nước. Với những đóng góp của mình, PGS.TS.BS Lê Tấn Sơn được bầu là Phó Chủ tịch Hội Phẫu thuật Nhi Việt Nam nhiệm kỳ đầu tiên (2000-2005) và là thành viên thường trực cho đến nay.'
-        #     '-Hiện nay, PGS.TS.BS Lê Tấn Sơn công tác tại khoa Ngoại nhi, Bệnh viện Đa khoa Tâm Anh TP.HCM.'
-        #
-        #
+        #     'description': 'Cố vấn chuyên môn Khoa Ngoại Nhi'
         # }, {
         #     'id': 3,
         #     'avatar': 'https://res.cloudinary.com/ds4oggqzq/image/upload/v1753540213/tuannd_ynmsle.jpg',
