@@ -45,10 +45,12 @@
     </div>
 
     <div class="col-md-3">
-      <select name="hospital" class="form-select">
+      <select name="hospital_id" class="form-select">
         <option value="">BỆNH VIỆN</option>
         {% for h in hospitals %}
-          <option value="{{ h }}" {% if request.args.get('hospital') == h %}selected{% endif %}>{{ h }}</option>
+          <option value="{{ h.id }}" {% if request.args.get('hospital_id') == h.id|string %}selected{% endif %}>
+            {{ h.name }}
+          </option>
         {% endfor %}
       </select>
     </div>

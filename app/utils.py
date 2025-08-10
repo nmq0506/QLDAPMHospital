@@ -14,7 +14,6 @@ def add_user(name, username, password, user_role,phone,email, **kwargs):
     user = User(name=name,
                 username=username,
                 password=str(hashlib.md5(password.strip().encode('utf-8')).hexdigest()),
-                avatar=kwargs.get('avatar'),
                 user_role=UserRole.USER,
                 phone= phone,
                 email=email

@@ -1,12 +1,10 @@
 from sqlalchemy import Column, Integer, String, Float, Boolean, ForeignKey, Enum, DateTime, Double
 from sqlalchemy.orm import relationship, backref
-from wtforms.validators import email
 
 from app import db, app
 from flask_login import UserMixin
 from enum import Enum as PyEnum
 from datetime import datetime
-import hashlib
 
 class UserRole(PyEnum):
     ADMIN = 1
@@ -22,6 +20,14 @@ class PaymentStatus(PyEnum):
     PENDING = 1
     SUCCESS = 2
     FAILED = 3
+
+class CertificateEnum(PyEnum):
+    PGS_TS = 'PGS.TS'
+    TS = 'TS'
+    THS = 'ThS'
+    BS_CKII = 'BS.CKII'
+    BS_CKI = 'BS.CKI'
+
 
 class User(db.Model, UserMixin):
     id = Column(Integer, primary_key=True, autoincrement=True)
@@ -61,20 +67,24 @@ class Specialty(db.Model):
 
 class Doctor(db.Model):
     id = Column(Integer, ForeignKey(User.id), primary_key=True)
-    name = Column(String(50), nullable=False)
     avatar = Column(String(100))
     description = Column(String(255), nullable=False)
-    certificate = Column(String(50), nullable=False)
+    certificate = Column(Enum(CertificateEnum), default=CertificateEnum.THS)
     specialty_id = Column(Integer, ForeignKey(Specialty.id), nullable=False)
     experience_years = Column(Integer,nullable=False)
-    time_start = Column(DateTime, nullable=False)
-    time_end = Column(DateTime, nullable=False)
     hospital_id = Column(Integer, ForeignKey(Hospital.id),nullable=False)
     appointments = relationship('AppointmentSchedule', backref='doctor', lazy=True)
     reviews = relationship('Review', backref='doctor', lazy=True)
+    # schedules = relationship('DoctorSchedule', backref='doctor', lazy=True)
 
-    def __str__(self):
-        return self.name
+    @property
+    def name(self):
+        return self.user.name if self.user else None
+
+class DoctorSchedule:
+    id = Column(Integer, primary_key=True, autoincrement=True)
+    schedule_date = Column(DateTime, default=datetime.now())
+    doctor_id = Column(Integer, ForeignKey(Doctor.id), nullable=False)
 
 class Review(db.Model):
     id = Column(Integer, primary_key=True, autoincrement=True)
@@ -83,8 +93,6 @@ class Review(db.Model):
     created_date = Column(DateTime, default=datetime.now())
     user_id = Column(Integer,ForeignKey(User.id), nullable=False)
     doctor_id = Column(Integer,ForeignKey(Doctor.id),nullable=False)
-
-
 
 class Patient(db.Model):
     id = Column(Integer, primary_key=True, autoincrement=True)
@@ -163,6 +171,27 @@ if __name__ == '__main__':
         #     specialty = Specialty(**s)
         #     db.session.add(specialty)
         # db.session.commit()
+        #
+        # hospitals = [{
+        #     'name': 'Bệnh viện Tâm Anh',
+        #     'location': 'Q8'
+        # }, {
+        #     'name': 'Bệnh viện Chợ rẫy',
+        #     'location': 'Q5'
+        # }, {
+        #     'name': 'Bệnh viện Quân Y 175',
+        #     'location': 'GV'
+        # }, {
+        #     'name': 'Bệnh viện CTCH TPHCM',
+        #     'location': 'Q1'
+        # }, {
+        #     'name': 'Bệnh viện Bạch Mai',
+        #     'location': 'HN'
+        # }]
+        # for h in hospitals:
+        #     hospitals = Hospital(**h)
+        #     db.session.add(hospitals)
+        # db.session.commit()
         # users = [{
         #     'name': 'Lê Tấn Sơn',
         #     'username': 'sonlt',
@@ -177,6 +206,27 @@ if __name__ == '__main__':
         #     'phone': '0123452222',
         #     'email': '1223@gmail.com',
         #     'user_role': 'doctor'
+        # }, {
+        #     'name': 'Đỗ Ngọc Lâm',
+        #     'username': 'lamdn',
+        #     'password': hashlib.md5('123456'.encode('utf-8')).hexdigest(),
+        #     'phone': '0123452456',
+        #     'email': '12222133@gmail.com',
+        #     'user_role': 'doctor'
+        # }, {
+        #     'name': 'Phạm Thị Loan',
+        #     'username': 'loanpt',
+        #     'password': hashlib.md5('123456'.encode('utf-8')).hexdigest(),
+        #     'phone': '0123459',
+        #     'email': '1223a@gmail.com',
+        #     'user_role': 'doctor'
+        # }, {
+        #     'name': 'Cam Ngọc Phượng',
+        #     'username': 'phuongcn',
+        #     'password': hashlib.md5('123456'.encode('utf-8')).hexdigest(),
+        #     'phone': '012312459',
+        #     'email': '122aaa3a@gmail.com',
+        #     'user_role': 'doctor'
         # }]
         # for u in users:
         #     user = User(**u)
@@ -184,28 +234,47 @@ if __name__ == '__main__':
         # db.session.commit()
 
         doctors = [{
-            'id': 4,
-            'name': 'Lê Tấn Sơn',
+            'id': 2,
             'avatar': 'https://res.cloudinary.com/ds4oggqzq/image/upload/v1753538716/sonlt_g7xedr.jpg',
-            'certificate': 'PGS.TS',
+            'certificate': CertificateEnum.PGS_TS,
             'specialty_id': 1,
             'hospital_id': 1,
-            'time_start': datetime.now(),
-            'time_end': datetime.now(),
             'experience_years': 20,
             'description': 'Cố vấn chuyên môn Khoa Ngoại Nhi'
         }, {
-            'id': 5,
-            'name': 'Nguyễn Đức Tuấn',
+            'id': 3,
             'avatar': 'https://res.cloudinary.com/ds4oggqzq/image/upload/v1753540213/tuannd_ynmsle.jpg',
-            'certificate': 'PGS.TS',
+            'certificate': CertificateEnum.PGS_TS,
             'specialty_id': 2,
             'hospital_id': 1,
-            'time_start': datetime.now(),
-            'time_end': datetime.now(),
             'experience_years': 11,
             'description': 'Chuyên viên khoa sản phụ'
+        }, {
+            'id': 4 ,
+            'avatar': 'https://res.cloudinary.com/ds4oggqzq/image/upload/v1753583209/dr3jpg_gil8fr.jpg',
+            'certificate': CertificateEnum.BS_CKII,
+            'specialty_id': 1,
+            'hospital_id': 2,
+            'experience_years': 20,
+            'description': 'Bác sĩ chuyên môn Khoa Ngoại Nhi'
+        }, {
+            'id': 5,
+            'avatar': 'https://res.cloudinary.com/ds4oggqzq/image/upload/v1753583244/dr4_txdd7q.jpg',
+            'certificate': CertificateEnum.THS,
+            'specialty_id': 4,
+            'hospital_id': 3,
+            'experience_years': 11,
+            'description': 'Chuyên viên bệnh viện'
+        }, {
+            'id': 6,
+            'avatar': 'https://res.cloudinary.com/ds4oggqzq/image/upload/v1753583379/dr5_mdrqri.jpg',
+            'certificate': CertificateEnum.TS,
+            'specialty_id': 2,
+            'hospital_id': 1,
+            'experience_years': 11,
+            'description': 'Giám đốc Trung tâm Sơ sinh Bệnh viện Đa khoa Tâm Anh TP.HCM'
         }]
+
         for doctor in doctors:
             doctor = Doctor(**doctor)
             db.session.add(doctor)
