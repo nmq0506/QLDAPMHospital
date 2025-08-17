@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <title>ĐĂNG KÝ TÀI KHOẢN CHO BÁC SĨ</title>
+
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="{{ url_for('static', filename='vendor/fontawesome-free/css/all.min.css') }}">
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css?family=Nunito:200,300,400,700,900" rel="stylesheet">
+    <!-- Custom styles -->
+    <link href="{{ url_for('static', filename='css/sb-admin-2.min.css') }}" rel="stylesheet">
+</head>
+
+<body class="bg-gradient-primary">
+
+<div class="container">
+    <div class="card o-hidden border-0 shadow-lg my-5">
+        <div class="card-body p-0">
+            <div class="row">
+                <!-- Image -->
+                <div class="col-lg-5 d-none d-lg-block bg-register-image">
+                    <img src="https://mdbcdn.b-cdn.net/img/Photos/new-templates/bootstrap-registration/draw1.webp"
+                         class="img-fluid" alt="Sample image">
+                </div>
+                <!-- Form -->
+                <div class="col-lg-7">
+                    <div class="p-5">
+                        <div class="text-center">
+                            <h1 class="text-danger h4 text-gray-900 mb-4">ĐĂNG KÝ TÀI KHOẢN CHO BÁC SĨ!</h1>
+                        </div>
+                        <form method="post" action="{{ url_for('doctor_register') }}"
+                              enctype="multipart/form-data" class="user">
+
+                            <div class="form-group row">
+                                <div class="col-sm-6 mb-3 mb-sm-0">
+                                    <input type="text" class="form-control form-control-user" name="name"
+                                           placeholder="Họ và tên" required>
+                                </div>
+                                <div class="col-sm-6">
+                                    <input type="number" class="form-control form-control-user" name="phone"
+                                           placeholder="SĐT" required>
+                                </div>
+                            </div>
+
+                            <div class="form-group">
+                                <input type="date" class="form-control form-control-user" name="birth_day"
+                                       placeholder="Ngày sinh" required>
+                            </div>
+
+                            <div class="form-group">
+                                <input type="text" class="form-control form-control-user" name="address"
+                                       placeholder="Địa chỉ" required>
+                            </div>
+
+                            <div class="form-group">
+                                <input type="email" class="form-control form-control-user" name="email"
+                                       placeholder="Email" required>
+                            </div>
+
+                            <div class="form-group">
+                                <label class="form-label">Giới tính:</label><br>
+                                <div class="form-check form-check-inline">
+                                    <input class="form-check-input" type="radio" name="sex" id="male" value="Nam" required>
+                                    <label class="form-check-label" for="male">Nam</label>
+                                </div>
+                                <div class="form-check form-check-inline">
+                                    <input class="form-check-input" type="radio" name="sex" id="female" value="Nữ" required>
+                                    <label class="form-check-label" for="female">Nữ</label>
+                                </div>
+                            </div>
+
+                            <div class="form-group">
+                                <input type="text" class="form-control form-control-user" name="username"
+                                       placeholder="Tên đăng nhập" required>
+                            </div>
+
+                            <div class="form-group row">
+                                <div class="col-sm-6 mb-3 mb-sm-0">
+                                    <input type="password" class="form-control form-control-user"
+                                           name="password" id="pass" placeholder="Nhập mật khẩu" required>
+                                </div>
+                                <div class="col-sm-6">
+                                    <input type="password" class="form-control form-control-user"
+                                           id="confirm" name="confirm" placeholder="Nhập lại mật khẩu" required>
+                                </div>
+                            </div>
+
+                            <!-- Upload avatar -->
+                            <div class="form-group">
+                                <label for="avatar">Ảnh đại diện (tùy chọn):</label>
+                                <input type="file" class="form-control-file" name="avatar" accept="image/*">
+                            </div>
+
+                            <!-- Thông báo lỗi -->
+                            {% if err_msg %}
+                                <div class="form-group">
+                                    <label class="text-danger">{{ err_msg }}</label>
+                                </div>
+                            {% endif %}
+
+                            <input type="submit" value="Đăng ký tài khoản"
+                                   class="btn btn-primary btn-user btn-block">
+                        </form>
+
+                        <hr>
+                        <div class="text-center">
+                            <a class="small" href="#">Quên mật khẩu?</a>
+                        </div>
+                        <div class="text-center">
+                            <a class="small" href="{{ url_for('doctor_login') }}">Đã có tài khoản? Đăng nhập!</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- JS -->
+<script src="{{ url_for('static', filename='vendor/jquery/jquery.min.js') }}"></script>
+<script src="{{ url_for('static', filename='vendor/bootstrap/js/bootstrap.bundle.min.js') }}"></script>
+<script src="{{ url_for('static', filename='vendor/jquery-easing/jquery.easing.min.js') }}"></script>
+<script src="{{ url_for('static', filename='js/sb-admin-2.min.js') }}"></script>
+
+</body>
+</html>

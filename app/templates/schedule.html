@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Lịch Làm Việc Bác Sĩ</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/schedule.css') }}" type="text/css">
+
+</head>
+<body>
+
+<div class="schedule-container">
+    <div class="schedule-header">
+        <h3>Lịch làm việc tuần</h3>
+    </div>
+    <table>
+        <thead>
+            <tr>
+                <th class="time-col">Thời gian</th>
+                <th>Thứ 2</th>
+                <th>Thứ 3</th>
+                <th>Thứ 4</th>
+                <th>Thứ 5</th>
+                <th>Thứ 6</th>
+                <th>Thứ 7</th>
+                <th>Chủ Nhật</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for time in time_slots %}
+            <tr>
+                <td class="time-col">{{ time }}</td>
+
+                {% for day_index in range(2, 9) %}
+
+                    {% set cell = schedule_grid[time][day_index] %}
+
+                    {% if cell.type == 'event' %}
+                        <td class="event {{ cell.class }}" rowspan="{{ cell.rowspan }}">
+                            <strong>{{ cell.title }} </strong>
+                            <strong> {{ cell.start_str }} - {{ cell.end_str }}</strong>
+
+
+                        </td>
+                    {% elif cell.type == 'empty' %}
+                        <td></td>
+                    {% endif %}
+                    {% endfor %}
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+
+</body>
+
+</html>

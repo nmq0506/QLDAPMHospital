@@ -1,10 +1,12 @@
 from sqlalchemy import Column, Integer, String, Float, Boolean, ForeignKey, Enum, DateTime, Double
 from sqlalchemy.orm import relationship, backref
+from wtforms.validators import email
 
 from app import db, app
 from flask_login import UserMixin
 from enum import Enum as PyEnum
 from datetime import datetime
+import hashlib
 
 class UserRole(PyEnum):
     ADMIN = 1

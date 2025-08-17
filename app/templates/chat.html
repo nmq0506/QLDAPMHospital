@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Firebase Chat</title>
+
+<script type="module" src="{{ url_for('static', filename='firebase/chat.js') }}"></script>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/chat.css') }}" type="text/css">
+
+    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-firestore.js"></script>
+</head>
+<body>
+    <div id="chat-container">
+        <h1>Chat</h1>
+        <div id="messages-list"></div>
+
+        <div class="input-area">
+            <input
+                type="text"
+                id="message-input"
+                placeholder="Type a message"
+            >
+            <button id="send-button">Send</button>
+        </div>
+    </div>
+
+
+</body>
+</html>
