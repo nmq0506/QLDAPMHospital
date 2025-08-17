@@ -136,7 +136,7 @@ class Payment(db.Model):
 
 if __name__ == '__main__':
     with app.app_context():
-        db.create_all()
+        # db.create_all()
         # u = User(name='Quân', username='mq', password=str(hashlib.md5('123456'.encode('utf-8')).hexdigest()),phone='0123456789',email='123@gmail.com',
         #          user_role=UserRole.USER)
         # db.session.add(u)
@@ -235,49 +235,49 @@ if __name__ == '__main__':
         #     db.session.add(user)
         # db.session.commit()
 
-        # doctors = [{
-        #     'id': 2,
-        #     'avatar': 'https://res.cloudinary.com/ds4oggqzq/image/upload/v1753538716/sonlt_g7xedr.jpg',
-        #     'certificate': CertificateEnum.PGS_TS,
-        #     'specialty_id': 1,
-        #     'hospital_id': 1,
-        #     'experience_years': 20,
-        #     'description': 'Cố vấn chuyên môn Khoa Ngoại Nhi'
-        # }, {
-        #     'id': 3,
-        #     'avatar': 'https://res.cloudinary.com/ds4oggqzq/image/upload/v1753540213/tuannd_ynmsle.jpg',
-        #     'certificate': CertificateEnum.PGS_TS,
-        #     'specialty_id': 2,
-        #     'hospital_id': 1,
-        #     'experience_years': 11,
-        #     'description': 'Chuyên viên khoa sản phụ'
-        # }, {
-        #     'id': 4 ,
-        #     'avatar': 'https://res.cloudinary.com/ds4oggqzq/image/upload/v1753583209/dr3jpg_gil8fr.jpg',
-        #     'certificate': CertificateEnum.BS_CKII,
-        #     'specialty_id': 1,
-        #     'hospital_id': 2,
-        #     'experience_years': 20,
-        #     'description': 'Bác sĩ chuyên môn Khoa Ngoại Nhi'
-        # }, {
-        #     'id': 5,
-        #     'avatar': 'https://res.cloudinary.com/ds4oggqzq/image/upload/v1753583244/dr4_txdd7q.jpg',
-        #     'certificate': CertificateEnum.THS,
-        #     'specialty_id': 4,
-        #     'hospital_id': 3,
-        #     'experience_years': 11,
-        #     'description': 'Chuyên viên bệnh viện'
-        # }, {
-        #     'id': 6,
-        #     'avatar': 'https://res.cloudinary.com/ds4oggqzq/image/upload/v1753583379/dr5_mdrqri.jpg',
-        #     'certificate': CertificateEnum.TS,
-        #     'specialty_id': 2,
-        #     'hospital_id': 1,
-        #     'experience_years': 11,
-        #     'description': 'Giám đốc Trung tâm Sơ sinh Bệnh viện Đa khoa Tâm Anh TP.HCM'
-        # }]
-        #
-        # for doctor in doctors:
-        #     doctor = Doctor(**doctor)
-        #     db.session.add(doctor)
-        # db.session.commit()
+        doctors = [{
+            'id': 2,
+            'avatar': 'https://res.cloudinary.com/ds4oggqzq/image/upload/v1753538716/sonlt_g7xedr.jpg',
+            'certificate': CertificateEnum.PGS_TS,
+            'specialty_id': 1,
+            'hospital_id': 1,
+            'experience_years': 20,
+            'description': 'Cố vấn chuyên môn Khoa Ngoại Nhi'
+        }, {
+            'id': 3,
+            'avatar': 'https://res.cloudinary.com/ds4oggqzq/image/upload/v1753540213/tuannd_ynmsle.jpg',
+            'certificate': CertificateEnum.PGS_TS,
+            'specialty_id': 2,
+            'hospital_id': 1,
+            'experience_years': 11,
+            'description': 'Chuyên viên khoa sản phụ'
+        }, {
+            'id': 4 ,
+            'avatar': 'https://res.cloudinary.com/ds4oggqzq/image/upload/v1753583209/dr3jpg_gil8fr.jpg',
+            'certificate': CertificateEnum.BS_CKII,
+            'specialty_id': 1,
+            'hospital_id': 2,
+            'experience_years': 20,
+            'description': 'Bác sĩ chuyên môn Khoa Ngoại Nhi'
+        }, {
+            'id': 5,
+            'avatar': 'https://res.cloudinary.com/ds4oggqzq/image/upload/v1753583244/dr4_txdd7q.jpg',
+            'certificate': CertificateEnum.THS,
+            'specialty_id': 4,
+            'hospital_id': 3,
+            'experience_years': 11,
+            'description': 'Chuyên viên bệnh viện'
+        }, {
+            'id': 6,
+            'avatar': 'https://res.cloudinary.com/ds4oggqzq/image/upload/v1753583379/dr5_mdrqri.jpg',
+            'certificate': CertificateEnum.TS,
+            'specialty_id': 2,
+            'hospital_id': 1,
+            'experience_years': 11,
+            'description': 'Giám đốc Trung tâm Sơ sinh Bệnh viện Đa khoa Tâm Anh TP.HCM'
+        }]
+
+        for doctor in doctors:
+            doctor = Doctor(**doctor)
+            db.session.add(doctor)
+        db.session.commit()
