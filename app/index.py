@@ -2,9 +2,10 @@ from flask import render_template, jsonify, url_for, redirect, flash, request
 from flask_login import login_user, logout_user, current_user, login_required
 
 from flask_login import login_user, logout_user
+from fontTools.misc.plistlib import end_date
 from sqlalchemy import func
 from wtforms.validators import email
-from datetime import datetime, timedelta
+from datetime import datetime, timedelta, date
 from app import app, dao,utils,login, db
 from app.models import UserRole, Doctor, Patient, AppointmentSchedule,Hospital
 @app.route('/user/login', methods=['get', 'post'])
@@ -130,6 +131,7 @@ def user_logout():
 
 @app.route("/")
 def index():
+    # return render_template("home_schedule_doctor.html")
     return render_template("User/home.html")
 
 @app.route('/specialties')
@@ -154,13 +156,26 @@ def doctors():
 
 #Nguyen lm
 # @app.route('/appointments-doctor')
-@app.route("/schedule-doctor/<int:doctor_id>")
+@app.route("/schedule-doctor/<int:doctor_id>/<string:date_str>")
 # @app.route("/")
-def schedule_view(doctor_id):
+def schedule_view(doctor_id,date_str):
+    current_date = datetime.strptime(date_str, '%Y-%m-%d').date()
+    start_of_week = current_date - timedelta(days=current_date.weekday())
+    end_of_week = start_of_week + timedelta(days=6)
+    prev_week_date = start_of_week - timedelta(days=1)
+    next_week_date = end_of_week + timedelta(days=1)
+    today_date = date.today()
+
+    # Lọc dữ liệu theo doctor_id VÀ tuần
+    appointments_doctor = dao.get_appointments_doctor_accept(doctor_id=doctor_id)
+    appointments_this_week = [
+        appo for appo in appointments_doctor
+        if start_of_week <= appo.date.date() <= end_of_week
+    ]
 
     time_slots = [
         "06:30", "06:45", "07:00", "07:15", "07:30", "07:45", "08:00", "08:15", "08:30", "08:45",
-       "09:00", "09:15", "09:30", "09:45", "10:00", "10:15", "10:30", "10:45", "11:00", "12:00", "12:15", "12:30", "12:45", "13:00", "13:15", "13:30", "13:45",
+       "09:00", "09:15", "09:30", "09:45", "10:00", "10:15", "10:30", "10:45", "11:00", "11:15", "13:00", "13:15", "13:30", "13:45",
        "14:00", "14:15", "14:30", "14:45", "15:00", "15:15", "15:30", "15:45", "16:00", "16:15",
        "16:30", "16:45", "17:00"
     ]
@@ -174,11 +189,11 @@ def schedule_view(doctor_id):
         schedule_grid[time] = row_of_cells
 
 
-    appointments_doctor = dao.get_appointments_doctor_accept(doctor_id=doctor_id)
-    for appo in appointments_doctor:
+
+    for appo in appointments_this_week:
 
         start_datetime = appo.date
-        end_datetime = start_datetime + timedelta(hours=1)
+        end_datetime = start_datetime + timedelta(hours=0.5)
 
         start_str = start_datetime.strftime('%H:%M')
         end_str = end_datetime.strftime('%H:%M')
@@ -207,8 +222,17 @@ def schedule_view(doctor_id):
             time_to_mark = time_slots[start_index + i]
             schedule_grid[time_to_mark][day_column] = {'type': 'spanned'}
 
-
-    return render_template('schedule.html', time_slots=time_slots, schedule_grid=schedule_grid)
+    return render_template(
+        'schedule.html',
+        doctor_id=doctor_id,
+        time_slots=time_slots,
+        schedule_grid=schedule_grid,
+        start_of_week=start_of_week,
+        end_of_week=end_of_week,
+        prev_week_date=prev_week_date,
+        today_date=today_date,
+        next_week_date=next_week_date
+    )
 # @app.route("/")
 def chat():
     return render_template("chat.html")
@@ -256,12 +280,13 @@ def book_appointment():
             date=appointment_date,
             note=symptoms,
             room="101",
-            booked_by=1
+            booked_by=current_user.id
         )
         dao.create_appointment(new_appointment=new_appointment)
 
 
-        return redirect(url_for('some_confirmation_page'))
+
+        return render_template("booking_form.html")
 
 
 
@@ -292,6 +317,9 @@ def get_schedule(doctor_id):
 
 
     booked_appointments = dao.find_by_doctor_id_and_date_appointment(doctor_id, selected_date)
+    time_start= dao.find_by_doctor_id_schedule_doctor(doctor_id)
+    time_end_str = "2025-08-20 17:00:00"
+    time_end_datetime = datetime.strptime(time_end_str, "%Y-%m-%d %H:%M:%S")
 
 
     booked_times = [appointment.date.time() for appointment in booked_appointments]
@@ -299,12 +327,12 @@ def get_schedule(doctor_id):
 
     potential_slots = []
 
-    current_slot_dt = datetime.combine(selected_date, doctor.time_start.time())
-    end_time_dt = datetime.combine(selected_date, doctor.time_end.time())
+    current_slot_dt = datetime.combine(selected_date, time_start.schedule_date.time())
+    end_time_dt = datetime.combine(selected_date,time_end_datetime.time())
 
     while current_slot_dt < end_time_dt:
         potential_slots.append(current_slot_dt)
-        current_slot_dt += timedelta(hours=1)
+        current_slot_dt += timedelta(hours=0.25)
 
 
     available_slots = [
@@ -315,6 +343,23 @@ def get_schedule(doctor_id):
     available_slots_str = [slot.strftime('%Y-%m-%d %H:%M') for slot in available_slots]
 
     return jsonify({'schedule': available_slots_str})
+
+@app.route("/home_schedule_doctor")
+def home_schedule_doctor():
+    appts = dao.get_appointments_doctor_accept(2)
+
+    event_list=[]
+
+    for appt in appts:
+        events = {}
+        end_date = appt.date + timedelta(hours=1)
+        events['title']=appt.note
+        events['start'] = appt.date.isoformat()
+        events['end'] = end_date.isoformat()
+        event_list.append(events)
+    return jsonify({'events': event_list})
+
+
 
 
 if "__main__" == __name__:

@@ -1,5 +1,5 @@
 # import data,json
-from app.models import Specialty, Doctor, Hospital, AppointmentSchedule, AppointmentScheduleStatus, Patient
+from app.models import Specialty, Doctor, Hospital, AppointmentSchedule, AppointmentScheduleStatus, Patient, DoctorSchedule
 from sqlalchemy import or_, func
 from sqlalchemy.orm import joinedload
 from app import db
@@ -130,3 +130,7 @@ def load_hospital():
 #             if u["username"]==username and u["password"]== password:
 #                 return True
 #     return False
+
+def find_by_doctor_id_schedule_doctor(doctor_id):
+    return DoctorSchedule.query.filter(DoctorSchedule.doctor_id.__eq__(doctor_id)).first()
+

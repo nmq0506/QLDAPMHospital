@@ -56,9 +56,7 @@ body {
     background-color: #e9e9e9;
 }
 
-/* =================================
-   BẢNG LỊCH TRÌNH
-   ================================= */
+
 table {
     width: 100%;
     border-collapse: collapse;
@@ -94,9 +92,7 @@ tbody td {
     vertical-align: top; /* Căn nội dung lên trên theo mặc định */
 }
 
-/* =================================
-   KHỐI SỰ KIỆN & NGÀY NGHỈ
-   ================================= */
+
 .event {
     padding: 4px 8px; /* Padding đã được thu hẹp */
     text-align: left;
@@ -113,7 +109,7 @@ tbody td {
     margin-bottom: 4px;
 }
 
-/* Các loại màu sự kiện */
+
 .event-blue {
     background-color: #eaf3fb;
     border: 1px solid #b7d6f5;
@@ -134,11 +130,48 @@ tbody td {
     border: 1px solid #dcdcdc;
 }
 
-/* Định dạng cho ngày nghỉ */
+
 .day-off {
     background-color: #f8f9fa;
     color: #b0b0b0;
     font-size: 1.5em;
     font-weight: bold;
     vertical-align: middle; /* Căn giữa nội dung cho ngày nghỉ */
+}
+
+
+.nav-buttons {
+    display: flex;
+    gap: 8px;
+}
+
+.nav-btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: 8px 16px;
+    border: none;
+    border-radius: 8px;
+    background-color: #003366; /* Màu xanh đậm */
+    color: white;
+    font-size: 14px;
+    font-weight: bold;
+    text-decoration: none;
+    cursor: pointer;
+    transition: background-color 0.2s;
+}
+
+.nav-btn:hover {
+    background-color: #0055a4; /* Màu xanh đậm hơn khi hover */
+}
+
+.nav-btn.current {
+    background-color: #007bff; /* Màu xanh dương cho nút Hiện tại */
+}
+.nav-btn.current:hover {
+    background-color: #0056b3;
+}
+
+.nav-btn .fa-solid {
+    margin-right: 6px;
 }

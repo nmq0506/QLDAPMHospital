@@ -83,7 +83,7 @@ class Doctor(db.Model):
     def name(self):
         return self.user.name if self.user else None
 
-class DoctorSchedule:
+class DoctorSchedule(db.Model):
     id = Column(Integer, primary_key=True, autoincrement=True)
     schedule_date = Column(DateTime, default=datetime.now())
     doctor_id = Column(Integer, ForeignKey(Doctor.id), nullable=False)

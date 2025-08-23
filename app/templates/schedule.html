@@ -11,43 +11,58 @@
 
 <div class="schedule-container">
     <div class="schedule-header">
-        <h3>Lịch làm việc tuần</h3>
+        <h3>Tuần từ {{ start_of_week.strftime('%d/%m') }} - {{ end_of_week.strftime('%d/%m/%Y') }}</h3>
+
+        <div class="nav-buttons">
+            <a href="{{ url_for('schedule_view', doctor_id=doctor_id, date_str=prev_week_date.strftime('%Y-%m-%d')) }}"
+               class="nav-btn">
+                &lt;&lt; Tuần trước
+            </a>
+            <a href="{{ url_for('schedule_view', doctor_id=doctor_id, date_str=today_date.strftime('%Y-%m-%d')) }}"
+               class="nav-btn current">
+                <i class="fa-solid fa-magnifying-glass"></i> Hiện tại
+            </a>
+            <a href="{{ url_for('schedule_view', doctor_id=doctor_id, date_str=next_week_date.strftime('%Y-%m-%d')) }}"
+               class="nav-btn">
+                Tuần sau &gt;&gt;
+            </a>
+        </div>
     </div>
     <table>
         <thead>
-            <tr>
-                <th class="time-col">Thời gian</th>
-                <th>Thứ 2</th>
-                <th>Thứ 3</th>
-                <th>Thứ 4</th>
-                <th>Thứ 5</th>
-                <th>Thứ 6</th>
-                <th>Thứ 7</th>
-                <th>Chủ Nhật</th>
-            </tr>
+        <tr>
+            <th class="time-col">Thời gian</th>
+            <th>Thứ 2</th>
+            <th>Thứ 3</th>
+            <th>Thứ 4</th>
+            <th>Thứ 5</th>
+            <th>Thứ 6</th>
+            <th>Thứ 7</th>
+            <th>Chủ Nhật</th>
+        </tr>
         </thead>
         <tbody>
-            {% for time in time_slots %}
-            <tr>
-                <td class="time-col">{{ time }}</td>
+        {% for time in time_slots %}
+        <tr>
+            <td class="time-col">{{ time }}</td>
 
-                {% for day_index in range(2, 9) %}
+            {% for day_index in range(2, 9) %}
 
-                    {% set cell = schedule_grid[time][day_index] %}
+            {% set cell = schedule_grid[time][day_index] %}
 
-                    {% if cell.type == 'event' %}
-                        <td class="event {{ cell.class }}" rowspan="{{ cell.rowspan }}">
-                            <strong>{{ cell.title }} </strong>
-                            <strong> {{ cell.start_str }} - {{ cell.end_str }}</strong>
+            {% if cell.type == 'event' %}
+            <td class="event {{ cell.class }}" rowspan="{{ cell.rowspan }}">
+                <strong>{{ cell.title }} </strong>
+                <strong> {{ cell.start_str }} - {{ cell.end_str }}</strong>
 
 
-                        </td>
-                    {% elif cell.type == 'empty' %}
-                        <td></td>
-                    {% endif %}
-                    {% endfor %}
-            </tr>
+            </td>
+            {% elif cell.type == 'empty' %}
+            <td></td>
+            {% endif %}
             {% endfor %}
+        </tr>
+        {% endfor %}
         </tbody>
     </table>
 </div>

@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang='vi'>
+<head>
+    <meta charset='utf-8'/>
+    <script src='https://cdn.jsdelivr.net/npm/fullcalendar@6.1.14/index.global.min.js'></script>
+    <style>
+        body {
+          font-family: Arial, Helvetica, sans-serif;
+          padding: 20px;
+        }
+        #calendar {
+          max-width: 870px;
+          margin: 0 auto;
+        }
+    </style>
+</head>
+<body>
+
+<div id='calendar'></div>
+
+<script>
+
+    document.addEventListener('DOMContentLoaded', function() {
+      var calendarEl = document.getElementById('calendar');
+
+
+      var calendar = new FullCalendar.Calendar(calendarEl, {
+
+        headerToolbar: {
+          left: 'prev,next today',
+          center: 'title',
+          right: 'dayGridMonth,timeGridWeek,timeGridDay' // Các nút chuyển đổi chế độ xem
+        },
+
+        initialView: 'timeGridDay',
+
+        initialDate: '2025-08-28',
+
+        locale: 'en',
+
+        navLinks: true,
+
+        editable: true,
+
+
+
+         events: function() {
+
+  return fetch('/home_schedule_doctor')
+    .then(response => {
+      if (!response.ok) {
+        throw new Error('Network response was not ok');
+      }
+      return response.json();
+    })
+    .then(data => {
+
+      return data.events;
+    })
+    .catch(error => {
+      console.error('There has been a problem with your fetch operation:', error);
+
+      return [];
+    });
+}
+      });
+
+
+      calendar.render();
+    });
+</script>
+
+</body>
+</html>
