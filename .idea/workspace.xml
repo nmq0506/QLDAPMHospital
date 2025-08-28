@@ -5,13 +5,12 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="36e6bc4c-4878-48d7-8851-3b7f8b23dfd9" name="Changes" comment="">
+      <change afterPath="$PROJECT_DIR$/app/static/css/list_appt.css" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/static/js/list_appt.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/templates/Doctor/list_appt.html" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/app/dao.py" beforeDir="false" afterPath="$PROJECT_DIR$/app/dao.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/app/index.py" beforeDir="false" afterPath="$PROJECT_DIR$/app/index.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/static/css/schedule.css" beforeDir="false" afterPath="$PROJECT_DIR$/app/static/css/schedule.css" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/static/js/booking_form.js" beforeDir="false" afterPath="$PROJECT_DIR$/app/static/js/booking_form.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/templates/booking_form.html" beforeDir="false" afterPath="$PROJECT_DIR$/app/templates/booking_form.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/templates/home_schedule_doctor.html" beforeDir="false" afterPath="$PROJECT_DIR$/app/templates/home_schedule_doctor.html" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />

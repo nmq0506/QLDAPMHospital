@@ -1,3 +1,5 @@
+import math
+
 from flask import render_template, jsonify, url_for, redirect, flash, request
 from flask_login import login_user, logout_user, current_user, login_required
 
@@ -367,8 +369,17 @@ def home_schedule_doctor():
         event_list.append(events)
     return jsonify({'events': event_list})
 
+@app.route("/list-appt")
+def list_appp():
+    page = request.args.get('page')
+    list_appt= dao.find_appt_join_patient_doctor(2,page=page)
+    return render_template("Doctor/list_appt.html",list_appt=list_appt,pages=math.ceil(dao.count_appt()/3 ))
 
-
+@app.route("/change-status/<int:appt_id>")
+def change_status_cancel(appt_id):
+    dao.change_status_cancel(appt_id)
+    list_appt = dao.find_appt_join_patient_doctor(2)
+    return render_template("Doctor/list_appt.html",list_appt=list_appt)
 
 if "__main__" == __name__:
     app.run(debug=True,port=8080)

@@ -139,3 +139,26 @@ def find_by_hos_id_and_specialties_id_doctor(hospital_id, specialty_id):
 
 def find_all_specialty():
     return Specialty.query.all()
+
+def find_appt_join_patient_doctor(doctor_id, page=None):
+    query= AppointmentSchedule.query \
+    .options(joinedload(AppointmentSchedule.patient),
+             joinedload(AppointmentSchedule.doctor)) \
+    .filter(
+    AppointmentSchedule.doctor_id.__eq__(doctor_id),
+    AppointmentSchedule.status.__eq__(AppointmentScheduleStatus.ACCEPT))
+
+    if page:
+        page_size = 3
+        start = (int(page) - 1) * page_size
+        query = query.slice(start, start + page_size)
+
+    return query.all()
+
+def change_status_cancel(appt_id):
+    a= AppointmentSchedule.query.filter(AppointmentSchedule.id.__eq__(appt_id)).first()
+    a.status = AppointmentScheduleStatus.CANCEL
+    db.session.commit()
+
+def count_appt():
+    return AppointmentSchedule.query.count()
