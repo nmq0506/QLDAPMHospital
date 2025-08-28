@@ -134,3 +134,8 @@ def load_hospital():
 def find_by_doctor_id_schedule_doctor(doctor_id):
     return DoctorSchedule.query.filter(DoctorSchedule.doctor_id.__eq__(doctor_id)).first()
 
+def find_by_hos_id_and_specialties_id_doctor(hospital_id, specialty_id):
+    return Doctor.query.filter(Doctor.hospital_id.__eq__(hospital_id),Doctor.specialty_id.__eq__(specialty_id)).all()
+
+def find_all_specialty():
+    return Specialty.query.all()

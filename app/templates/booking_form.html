@@ -1,3 +1,10 @@
+{% extends 'layout/base.html' %}
+
+{% block title %}
+<title>Chuyên viên - Bác sĩ</title>
+{% endblock %}
+
+{% block content %}
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -19,6 +26,16 @@
             <option value="">---Chọn nơi khám---</option>
             {% for hospital in hospitals %}
             <option value="{{ hospital.id }}">{{ hospital.name }}</option>
+            {% endfor %}
+        </select>
+    </div>
+
+    <div class="form-group">
+        <label for="specialty-select">Chọn chuyên khoa cần khám:</label>
+        <select name="specialty" id="specialty-select" required>
+            <option value="">---Chọn chuyên khoa---</option>
+            {% for specialty in specialties %}
+            <option value="{{ specialty.id }}">{{ specialty.name }}</option>
             {% endfor %}
         </select>
     </div>
@@ -64,3 +81,4 @@
 
 </script>
 </html>
+{% endblock %}

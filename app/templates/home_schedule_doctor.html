@@ -42,6 +42,23 @@
 
         editable: true,
 
+        slotMinTime: '07:30:00',
+        slotMaxTime: '17:00:00',
+
+        businessHours: [
+    {
+      daysOfWeek: [1, 2, 3, 4, 5, 6, 0],
+      startTime: '07:30',
+      endTime: '11:00'
+    },
+    {
+      daysOfWeek: [1, 2, 3, 4, 5, 6, 0],
+      startTime: '12:00',
+      endTime: '17:00'
+    }
+  ],
+
+
 
 
          events: function() {

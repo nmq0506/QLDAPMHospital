@@ -16,6 +16,8 @@ body {
 }
 
 .schedule-header {
+    max-width: 750px;   /* bằng với bảng */
+    margin: auto;        /* căn giữa */
     padding: 10px 15px;
     display: flex;
     justify-content: space-between;
@@ -58,38 +60,38 @@ body {
 
 
 table {
-    width: 100%;
+
+
     border-collapse: collapse;
-    table-layout: fixed;
+    table-layout: auto;
+    width: auto;
+    margin: 0 auto;
+
 }
 
 th, td {
-    border: 1px solid #e0e0e0;
+    border: 4.2px solid #e0e0e0;
     text-align: center;
-    font-size: 13px;
+
 }
 
-/* Tiêu đề các cột ngày */
+/*
 thead th {
     background-color: #f9f9f9;
     padding: 10px 5px;
     font-weight: bold;
     vertical-align: middle;
-}
+} */
 
 /* Cột thời gian bên trái */
-.time-col {
-    width: 80px; /* Giảm nhẹ chiều rộng để gọn hơn */
-    background-color: #f9f9f9;
-    font-weight: bold;
-    padding: 3px 5px;
-    vertical-align: middle;
-}
+table td,
+table th {
+    padding: 0;
+    height: 12px;
+    line-height: 12px;
+    font-size: 11px;
+    width: 55px;
 
-/* Các ô trong thân bảng (đã thu hẹp) */
-tbody td {
-    padding: 3px 5px;
-    vertical-align: top; /* Căn nội dung lên trên theo mặc định */
 }
 
 
@@ -175,3 +177,4 @@ tbody td {
 .nav-btn .fa-solid {
     margin-right: 6px;
 }
+

@@ -2,8 +2,10 @@ document.addEventListener('DOMContentLoaded', () => {
 
     const hospitalSelect = document.getElementById('hospital-select');
     const doctorSelect = document.getElementById('doctor-select');
+    const specialtySelect = document.getElementById('specialty-select');
     const dateInput = document.getElementById('appointment-date'); // Lấy element mới
     const timeSlotsContainer = document.getElementById('time-slots-container');
+
 
 
     const today = new Date().toISOString().split('T')[0];
@@ -63,8 +65,14 @@ document.addEventListener('DOMContentLoaded', () => {
         dateInput.value = '';
         timeSlotsContainer.innerHTML = '<p>.</p>';
 
-        if (hospitalId) {
-            fetch(`/get-doctors/${hospitalId}`)
+
+    });
+
+    specialtySelect.addEventListener('change', () => {
+    const specialtyId = specialtySelect.value;
+    const hospitalId = hospitalSelect.value;
+
+            fetch(`/get-doctors/${hospitalId}/specialty/${specialtyId}`)
                 .then(response => response.json())
                 .then(data => {
                     doctorSelect.innerHTML = '<option value="">--Chọn bác sĩ--</option>';
@@ -77,8 +85,10 @@ document.addEventListener('DOMContentLoaded', () => {
                     doctorSelect.disabled = false;
                 })
                 .catch(error => console.error('Error fetching doctors:', error));
-        }
-    });
+
+
+    })
+
 
 
     doctorSelect.addEventListener('change', () => {
