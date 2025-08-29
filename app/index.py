@@ -7,7 +7,7 @@ from flask_login import login_user, logout_user
 from fontTools.misc.plistlib import end_date
 from sqlalchemy import func
 from wtforms.validators import email
-from datetime import datetime, timedelta, date
+from datetime import datetime, timedelta, date, time
 from app import app, dao,utils,login, db
 from app.models import UserRole, Doctor, Patient, AppointmentSchedule,Hospital
 @app.route('/user/login', methods=['get', 'post'])
@@ -36,7 +36,7 @@ def doctor_login():
         u = utils.auth_user(username=username, password=password, role=UserRole.DOCTOR)
         if u:
             login_user(u)
-            return redirect('/')
+            return redirect("/doctor/home")
         else:
             err_msg = "Tai khoan hoac mat khau sai !!!"
     return render_template('Doctor/login.html', err_msg=err_msg)
@@ -133,7 +133,7 @@ def user_logout():
 
 @app.route("/")
 def index():
-    # return render_template("home_schedule_doctor.html")
+    # return render_template("Doctor/home_schedule_doctor.html")
     return render_template("User/home.html")
 
 @app.route('/specialties')
@@ -344,10 +344,19 @@ def get_schedule(doctor_id):
         potential_slots.append(current_slot_dt)
         current_slot_dt += timedelta(minutes=5)
 
+    LUNCH_TIME = {
+        time(11, 5), time(11, 10), time(11, 15), time(11, 20), time(11, 25),
+        time(11, 30), time(11, 35), time(11, 40), time(11, 45), time(11, 50),
+        time(11, 55), time(12, 0), time(12, 5), time(12, 10), time(12, 15),
+        time(12, 20), time(12, 25), time(12, 30), time(12, 35), time(12, 40),
+        time(12, 45), time(12, 50), time(12, 55),
+    }
 
-    available_slots = [
-        slot for slot in potential_slots if slot.time() not in booked_times
+
+
+    available_slots = [ slot for slot in potential_slots if (slot.time() not in booked_times) and (slot.time() not in LUNCH_TIME)
     ]
+
 
 
     available_slots_str = [slot.strftime('%Y-%m-%d %H:%M') for slot in available_slots]
@@ -356,7 +365,7 @@ def get_schedule(doctor_id):
 
 @app.route("/home_schedule_doctor")
 def home_schedule_doctor():
-    appts = dao.get_appointments_doctor_accept(2)
+    appts = dao.get_appointments_doctor_accept(current_user.id)
 
     event_list=[]
 
@@ -372,14 +381,17 @@ def home_schedule_doctor():
 @app.route("/list-appt")
 def list_appp():
     page = request.args.get('page')
-    list_appt= dao.find_appt_join_patient_doctor(2,page=page)
+    list_appt= dao.find_appt_join_patient_doctor(current_user.id,page=page)
     return render_template("Doctor/list_appt.html",list_appt=list_appt,pages=math.ceil(dao.count_appt()/3 ))
 
 @app.route("/change-status/<int:appt_id>")
 def change_status_cancel(appt_id):
     dao.change_status_cancel(appt_id)
-    list_appt = dao.find_appt_join_patient_doctor(2)
-    return render_template("Doctor/list_appt.html",list_appt=list_appt)
+    list_appt = dao.find_appt_join_patient_doctor(current_user.id)
+    return render_template("Doctor/list_appt.html",list_appt=list_appt,pages=math.ceil(dao.count_appt()/3 ))
+@app.route("/doctor/home")
+def home_doctor():
+    return render_template("Doctor/home_schedule_doctor.html")
 
 if "__main__" == __name__:
     app.run(debug=True,port=8080)

@@ -1,7 +1,15 @@
+{% extends "layout/base_doctor.html" %}
+
+{% block title %}
+<title>Lịch làm việc bác sĩ</title>
+{% endblock %}
+
+{% block content %}
 <!DOCTYPE html>
 <html lang='vi'>
 <head>
     <meta charset='utf-8'/>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/home_schedule_doctor.css') }}">
     <script src='https://cdn.jsdelivr.net/npm/fullcalendar@6.1.14/index.global.min.js'></script>
     <style>
         body {
@@ -89,3 +97,4 @@
 
 </body>
 </html>
+{% endblock %}

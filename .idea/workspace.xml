@@ -5,12 +5,13 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="36e6bc4c-4878-48d7-8851-3b7f8b23dfd9" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/app/static/css/list_appt.css" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/app/static/js/list_appt.js" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/app/templates/Doctor/list_appt.html" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/static/css/home_schedule_doctor.css" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/templates/Layout/base_doctor.html" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/templates/Layout/header_doctor.html" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/dao.py" beforeDir="false" afterPath="$PROJECT_DIR$/app/dao.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/app/index.py" beforeDir="false" afterPath="$PROJECT_DIR$/app/index.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/templates/Doctor/list_appt.html" beforeDir="false" afterPath="$PROJECT_DIR$/app/templates/Doctor/list_appt.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/templates/home_schedule_doctor.html" beforeDir="false" afterPath="$PROJECT_DIR$/app/templates/Doctor/home_schedule_doctor.html" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -49,6 +50,11 @@
     &quot;settings.editor.selected.configurable&quot;: &quot;com.jetbrains.python.configuration.PyActiveSdkModuleConfigurable&quot;
   }
 }</component>
+  <component name="RecentsManager">
+    <key name="MoveFile.RECENT_KEYS">
+      <recent name="D:\qldapm\qlanpm\QLDAPMHospital\app\templates\Doctor" />
+    </key>
+  </component>
   <component name="RunManager" selected="Python.index">
     <configuration name="dao" type="PythonConfigurationType" factoryName="Python" temporary="true" nameIsGenerated="true">
       <module name="Hospital" />
