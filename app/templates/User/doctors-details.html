@@ -1,0 +1,130 @@
+{% extends 'layout/base.html' %}
+
+{% block title %}
+<title>Chi tiết bác sĩ</title>
+{% endblock %}
+
+{% block content %}
+<!DOCTYPE html>
+<html lang="en" xmlns:max-width="http://www.w3.org/1999/xhtml">
+<head>
+    <meta charset="UTF-8">
+
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet"
+          integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"
+            integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM"
+            crossorigin="anonymous"></script>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css">
+</head>
+<div class="container py-4">
+
+
+  <div class="container py-4">
+
+
+  <div class="card shadow-sm border-0">
+    <div class="card-body">
+      <div class="row g-4">
+        <!-- Avatar bác sĩ -->
+        <div class="col-md-4">
+          <div class="ratio ratio-1x1 rounded-3 bg-light overflow-hidden">
+            <img src="{{ doctor.avatar or 'https://via.placeholder.com/800x800?text=Doctor' }}"
+                 alt="{{ doctor.name }}" class="w-100 h-100" style="object-fit:cover;">
+          </div>
+        </div>
+
+        <!-- Thông tin bác sĩ -->
+        <div class="col-md-8">
+          <h1 class="h3 mb-2">{{ doctor.name }}</h1>
+
+          <!-- Học vị / certificate -->
+          {% if doctor.certificate %}
+          <div class="mb-2">
+            <span class="badge bg-dark-subtle text-dark fw-semibold"
+                  style="font-size:.85rem;">
+              {{ doctor.certificate
+                  |replace('CertificateEnum.','')
+                  |replace('_','.') }}
+            </span>
+          </div>
+          {% endif %}
+
+          <!-- Chuyên khoa: ảnh + tên to -->
+          {% if doctor.specialty %}
+          <div class="d-flex align-items-center gap-2 mb-2">
+            <img src="{{ doctor.specialty.avatar or doctor.specialty.image or 'https://via.placeholder.com/48x48' }}"
+                 alt="{{ doctor.specialty.name }}"
+                 width="48" height="48"
+                 class="rounded-circle border">
+            <div class="fs-5 fw-semibold">{{ doctor.specialty.name }}</div>
+          </div>
+          {% endif %}
+
+          <!-- Kinh nghiệm (xuống dòng riêng) -->
+          <div class="text-muted mb-1">
+            {{ doctor.experience_years or 0 }} năm kinh nghiệm
+          </div>
+
+          <!-- Bệnh viện: icon + xuống dòng -->
+          {% if doctor.hospital %}
+          <div class="text-muted mb-3">
+            <i class="bi bi-hospital me-1"></i>{{ doctor.hospital.name }}
+          </div>
+          {% endif %}
+
+          <!-- Mô tả -->
+          {% if doctor.description %}
+            <p class="mb-4">{{ doctor.description }}</p>
+          {% endif %}
+
+          <div class="d-flex gap-2">
+            <a class="btn btn-primary" href="tel:+84000000000">Gọi đặt lịch</a>
+            <a class="btn btn-outline-secondary" href="mailto:clinic@example.com">Gửi email</a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+{% if current_user.is_authenticated %}
+<div class="mt-2 mb-2">
+    <div class="form-floating mb-2">
+        <textarea class="form-control" id="content" name="text" placeholder="Nội dung bình luận"></textarea>
+        <label for="content">Nội dung bình luận</label>
+    </div>
+    <button class="btn btn-success" onclick="addComment({{ doctor.id }})">Bình luận</button>
+</div>
+{% else %}
+<p>Vui lòng <a href="/login?next=/products/{{product.id}}">đăng nhập</a> để bình luận!</p>
+{% endif %}
+<ul class="list-group" id="myComments">
+    {% for c in comments %}
+    <li class="list-group-item">
+        <div class="row">
+            <div class="col-md-1 md-4">
+                <img class="img-fluid rounded-circle"
+                     src="https://res-console.cloudinary.com/dieiwsp2i/thumbnails/v1/image/upload/v1749404808/cm5iamdqYW5veXFwbXRxZnlwNjk=/drilldown"/>
+            </div>
+            <div class="col-md-11 md-8">
+                <p>{{ c.comment }}</p>
+                <p class="created-date">{{ c.created_date }}</p>
+            </div>
+        </div>
+    </li>
+    {% endfor %}
+</ul>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.30.1/moment.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.30.1/moment-with-locales.min.js"></script>
+<script src="{{ url_for('static', filename='js/details.js') }}"></script>
+<script>
+    window.onload = function() {
+        let dates = document.getElementsByClassName("created-date");
+        for (let d of dates)
+            d.innerText = moment(d.innerText).locale('vi').fromNow();
+    }
+</script>
+</div>
+{% endblock %}

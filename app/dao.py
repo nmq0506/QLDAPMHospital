@@ -1,6 +1,8 @@
 # import data,json
-from app.models import Specialty, Doctor, Hospital, AppointmentSchedule, AppointmentScheduleStatus, Patient, DoctorSchedule
+from app.models import Specialty, Doctor, Hospital, AppointmentSchedule, AppointmentScheduleStatus, Patient, \
+    DoctorSchedule, Review
 from sqlalchemy import or_, func
+from flask_login import current_user
 from sqlalchemy.orm import joinedload
 from app import db
 def load_specialties(kw=None):
@@ -162,3 +164,21 @@ def change_status_cancel(appt_id):
 
 def count_appt():
     return AppointmentSchedule.query.count()
+
+def get_doctor(doctor_id):
+    return Doctor.query \
+        .options(joinedload(Doctor.hospital),
+                 joinedload(Doctor.specialty)) \
+        .filter(
+        Doctor.id.__eq__(doctor_id)
+    ).first()
+def get_comments(doctor_id):
+    return Review.query.filter(Review.doctor_id.__eq__(doctor_id)).order_by(-Review.id)
+
+
+def add_comment(content, doctor_id):
+    c = Review(comment=content, doctor_id=doctor_id, user_review=current_user,star=5)
+    db.session.add(c)
+    db.session.commit()
+
+    return c

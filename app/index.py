@@ -393,5 +393,23 @@ def change_status_cancel(appt_id):
 def home_doctor():
     return render_template("Doctor/home_schedule_doctor.html")
 
+@app.route('/doctors/<int:id>')
+def doctor_details(id):
+    doctor = dao.get_doctor(doctor_id=id)
+    comments = dao.get_comments(doctor_id=id)
+    return render_template('User/doctors-details.html', doctor=doctor, comments=comments)
+
+@app.route('/api/doctors/<int:id>/comments', methods=['post'])
+@login_required
+def add_comment(id):
+    data = request.json
+    c = dao.add_comment(content=data.get('content'), doctor_id=id)
+
+    return jsonify({'id': c.id, 'content': c.comment, 'user': {
+        'username': c.user_review.username,
+        'avatar': "https://res-console.cloudinary.com/dieiwsp2i/thumbnails/v1/image/upload/v1749404808/cm5iamdqYW5veXFwbXRxZnlwNjk=/drilldown"
+    }})
+
+
 if "__main__" == __name__:
     app.run(debug=True,port=8080)

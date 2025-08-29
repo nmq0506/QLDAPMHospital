@@ -1,0 +1,27 @@
+{% if current_user.is_authenticated %}
+<div class="mt-2 mb-2">
+    <div class="form-floating mb-2">
+        <textarea class="form-control" id="content" name="text" placeholder="Nội dung bình luận"></textarea>
+        <label for="content">Nội dung bình luận</label>
+    </div>
+    <button class="btn btn-success" onclick="addComment({{ product.id }})">Bình luận</button>
+</div>
+{% else %}
+<p>Vui lòng <a href="/login?next=/products/{{product.id}}">đăng nhập</a> để bình luận!</p>
+{% endif %}
+<ul class="list-group" id="myComments">
+    {% for c in comments %}
+    <li class="list-group-item">
+        <div class="row">
+            <div class="col-md-1 md-4">
+                <img class="img-fluid rounded-circle"
+                     src="{{ c.user.avatar }}"/>
+            </div>
+            <div class="col-md-11 md-8">
+                <p>{{ c.content }}</p>
+                <p class="created-date">{{ c.created_date }}</p>
+            </div>
+        </div>
+    </li>
+    {% endfor %}
+</ul>
