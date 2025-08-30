@@ -6,7 +6,7 @@ from app import app, dao,utils,login
 from app.models import *
 
 from flask_login import login_user, logout_user
-from fontTools.misc.plistlib import end_date
+
 from sqlalchemy import func
 from wtforms.validators import email
 from datetime import datetime, timedelta, date, time
@@ -72,7 +72,14 @@ def load_user(user_id):
 def user_logout():
     logout_user()
     return redirect('/user/login')
-
+@app.route("/doctor/logout")
+def doctor_logout():
+    logout_user()
+    return redirect('/doctor/login')
+@app.route("/admin/logout")
+def admin_logout():
+    logout_user()
+    return redirect('/admin/login')
 
 @app.route("/user/register", methods=['get', 'post'])
 def user_register():
