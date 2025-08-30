@@ -1,10 +1,46 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <title>$Title$</title>
-</head>
-<body>
-$END$
-</body>
-</html>
+{% extends "layout/base_admin.html" %}
+
+{% block title %}
+<title>Báo cáo doanh thu theo năm</title>
+{% endblock %}
+
+{% block content %}
+<div class="container mt-4">
+  <h2>Doanh thu theo năm {{ selected_year }}</h2>
+
+  <form method="get" action="{{ url_for('revenue_yearly') }}" class="mb-4 row g-2">
+    <div class="col-auto">
+      <input type="number" name="year" value="{{ selected_year }}" class="form-control"/>
+    </div>
+    <div class="col-auto">
+      <button type="submit" class="btn btn-primary">Xem</button>
+    </div>
+  </form>
+
+  <canvas id="yearlyChart" height="100"></canvas>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script>
+  const ctx = document.getElementById('yearlyChart').getContext('2d');
+  const chart = new Chart(ctx, {
+    type: 'bar',
+    data: {
+      labels: {{ labels|tojson }},
+      datasets: [{
+        label: 'Doanh thu (VND)',
+        data: {{ data|tojson }},
+        backgroundColor: 'rgba(75, 192, 192, 0.6)',
+        borderWidth: 1
+      }]
+    },
+    options: {
+      scales: {
+        y: { beginAtZero: true }
+      }
+    }
+  });
+</script>
+{% endblock %}

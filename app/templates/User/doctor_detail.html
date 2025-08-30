@@ -1,10 +1,32 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <title>$Title$</title>
-</head>
-<body>
-$END$
-</body>
-</html>
+{% extends 'layout/base.html' %}
+
+{% block title %}
+<title>{{ doctor.name }}</title>
+{% endblock %}
+
+{% block content %}
+<div class="row mt-4">
+    <div class="col-md-8">
+        <h2 class="text-primary">{{ doctor.certificate_label }} {{ doctor.name }}</h2>
+        <p><b>Chuyên khoa:</b> {{ doctor.specialty }}</p>
+        <p><b>Kinh nghiệm:</b> {{ doctor.experience_years }} năm</p>
+        <p><b>Bệnh viện:</b> {{ doctor.hospital }}</p>
+        <p>{{ doctor.description }}</p>
+
+        <div class="mt-4">
+            <a href="#gioi-thieu" class="d-block text-decoration-none text-info fw-bold mb-2">— GIỚI THIỆU</a>
+            <a href="#danh-gia" class="d-block text-decoration-none text-info fw-bold mb-2">— ĐÁNH GIÁ</a>
+            <a href="#dat-lich" class="d-block text-decoration-none text-info fw-bold mb-2">— ĐẶT LỊCH</a>
+        </div>
+    </div>
+
+    <div class="col-md-4 text-center">
+        {% if doctor.avatar %}
+            <img src="{{ doctor.avatar }}" alt="{{ doctor.name }}" class="img-fluid rounded shadow">
+        {% else %}
+            <img src="{{ url_for('static', filename='images/default-doctor.png') }}"
+                 alt="Doctor" class="img-fluid rounded shadow">
+        {% endif %}
+    </div>
+</div>
+{% endblock %}
