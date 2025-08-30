@@ -5,19 +5,12 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="36e6bc4c-4878-48d7-8851-3b7f8b23dfd9" name="Changes" comment="">
-      <change beforePath="$PROJECT_DIR$/.idea/Hospital.iml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/Hospital.iml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/app/dao.py" beforeDir="false" afterPath="$PROJECT_DIR$/app/dao.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/app/index.py" beforeDir="false" afterPath="$PROJECT_DIR$/app/index.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/app/models.py" beforeDir="false" afterPath="$PROJECT_DIR$/app/models.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/templates/Admin/revenue_monthly.html" beforeDir="false" afterPath="$PROJECT_DIR$/app/templates/Admin/revenue_monthly.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/templates/Admin/revenue_weekly.html" beforeDir="false" afterPath="$PROJECT_DIR$/app/templates/Admin/revenue_weekly.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/templates/Admin/revenue_yearly.html" beforeDir="false" afterPath="$PROJECT_DIR$/app/templates/Admin/revenue_yearly.html" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/app/templates/Layout/base_admin.html" beforeDir="false" afterPath="$PROJECT_DIR$/app/templates/Layout/base_admin.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/templates/User/doctor_detail.html" beforeDir="false" afterPath="$PROJECT_DIR$/app/templates/User/doctor_detail.html" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/app/templates/User/doctors.html" beforeDir="false" afterPath="$PROJECT_DIR$/app/templates/User/doctors.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/requirements.txt" beforeDir="false" afterPath="$PROJECT_DIR$/requirements.txt" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -205,7 +198,7 @@
       <workItem from="1756392367907" duration="2526000" />
       <workItem from="1756451190618" duration="5413000" />
       <workItem from="1756483644450" duration="1356000" />
-      <workItem from="1756544677732" duration="464000" />
+      <workItem from="1756544677732" duration="3455000" />
     </task>
     <servers />
   </component>
@@ -220,15 +213,12 @@
           <line>1</line>
           <option name="timeStamp" value="1" />
         </line-breakpoint>
-        <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
-          <url>file://$PROJECT_DIR$/app/models.py</url>
-          <option name="timeStamp" value="2" />
-        </line-breakpoint>
       </breakpoints>
     </breakpoint-manager>
   </component>
   <component name="com.intellij.coverage.CoverageDataManagerImpl">
+    <SUITE FILE_PATH="coverage/QLDAPMHospital$models__1_.coverage" NAME="models (1) Coverage Results" MODIFIED="1756548764460" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/app" />
     <SUITE FILE_PATH="coverage/QLDAPMHospital$models.coverage" NAME="models Coverage Results" MODIFIED="1753888325189" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/app" />
-    <SUITE FILE_PATH="coverage/QLDAPMHospital$index.coverage" NAME="index Coverage Results" MODIFIED="1756484756477" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/app" />
+    <SUITE FILE_PATH="coverage/QLDAPMHospital$index.coverage" NAME="index Coverage Results" MODIFIED="1756548886110" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/app" />
   </component>
 </project>

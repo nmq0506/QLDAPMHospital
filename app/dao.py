@@ -1,7 +1,7 @@
 # import data,json
 from app.models import Specialty, Doctor, Hospital, AppointmentSchedule, AppointmentScheduleStatus, Patient
 from sqlalchemy import or_, func
-from app.models import Specialty, Doctor, Hospital, AppointmentSchedule, AppointmentScheduleStatus, Patient, Payment, PaymentStatus
+from app.models import Specialty, Doctor, Hospital, AppointmentSchedule, AppointmentScheduleStatus, Patient, Payment, PaymentStatus, User
 from sqlalchemy import or_, func, extract
 from sqlalchemy.orm import joinedload
 from app import db
@@ -111,7 +111,7 @@ def load_specialties(kw=None):
 def get_doctors(kw=None, spec_id=None, hospital_id=None, degree=None):
     query = Doctor.query
     if kw:
-        query = query.filter(Doctor.name.ilike(f"%{kw}%"))
+        query = query.join(Doctor.user).filter(User.name.ilike(f"%{kw}%"))
     if spec_id:
         query = query.filter(Doctor.specialty_id==spec_id)
     if hospital_id:
