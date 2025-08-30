@@ -1,6 +1,6 @@
 # import data,json
-from app.models import Specialty, Doctor, Hospital, AppointmentSchedule, AppointmentScheduleStatus, Patient
-from sqlalchemy import or_, func
+from app.models import Specialty, Doctor, Hospital, AppointmentSchedule, AppointmentScheduleStatus, Patient, Payment, PaymentStatus
+from sqlalchemy import or_, func, extract
 from sqlalchemy.orm import joinedload
 from app import db
 def load_specialties(kw=None):
@@ -22,6 +22,9 @@ def get_doctors(kw=None, spec_id=None, hospital_id=None, degree=None):
     if degree:
         query = query.filter(Doctor.certificate==degree)
     return query.all()
+
+def get_doctor_by_id(doctor_id):
+    return Doctor.query.get(doctor_id)
 
 def load_hospital():
     return Hospital.query.all()
@@ -130,3 +133,64 @@ def load_hospital():
 #             if u["username"]==username and u["password"]== password:
 #                 return True
 #     return False
+
+def get_weekly_revenue(year=None, week=None):
+    return (
+        db.session.query(
+            func.date(Payment.created_date).label("date"),
+            func.sum(Payment.total_price).label("total")
+        )
+        .filter(
+            extract("year", Payment.created_date) == year,
+            func.week(Payment.created_date, 1) == week,  # mode=1: tuần bắt đầu từ Monday
+            Payment.status == PaymentStatus.SUCCESS
+        )
+        .group_by(func.date(Payment.created_date))
+        .order_by(func.date(Payment.created_date))
+        .all()
+    )
+
+def get_monthly_revenue(year, month):
+    results = (
+        db.session.query(
+            func.week(Payment.created_date, 1).label("week"),  # mode 1: tuần bắt đầu từ Monday
+            func.sum(Payment.total_price).label("total")
+        )
+        .filter(
+            extract("year", Payment.created_date) == year,
+            extract("month", Payment.created_date) == month,
+            Payment.status == PaymentStatus.SUCCESS
+        )
+        .group_by(func.week(Payment.created_date, 1))
+        .order_by(func.week(Payment.created_date, 1))
+        .all()
+    )
+
+    # Trả ra labels và data cho ChartJS
+    labels = [f"Tuần {row.week}" for row in results]
+    data = [row.total for row in results]
+    return labels, data
+
+def get_yearly_revenue(year):
+    results = (
+        db.session.query(
+            extract("month", Payment.created_date).label("month"),
+            func.sum(Payment.total_price).label("total")
+        )
+        .filter(
+            extract("year", Payment.created_date) == year,
+            Payment.status == PaymentStatus.SUCCESS
+        )
+        .group_by(extract("month", Payment.created_date))
+        .order_by(extract("month", Payment.created_date))
+        .all()
+    )
+
+    # Sinh đủ 12 tháng (tháng nào không có thì set 0)
+    revenue_by_month = {m: 0 for m in range(1, 13)}
+    for row in results:
+        revenue_by_month[int(row.month)] = row.total
+
+    labels = [f"Tháng {m}" for m in range(1, 13)]
+    data = [revenue_by_month[m] for m in range(1, 13)]
+    return labels, data

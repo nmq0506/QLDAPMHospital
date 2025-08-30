@@ -1,3 +1,5 @@
+from calendar import calendar
+
 from flask import render_template, jsonify, url_for, redirect, flash, request
 from flask_login import login_user, logout_user, current_user, login_required
 from app import app, dao,utils,login
@@ -127,13 +129,6 @@ def doctor_register():
             err_msg = "He thong dang co loi: " + str(ex)
     return render_template('Admin/doctor_register.html', err_msg=err_msg)
 
-
-@app.route("/user/logout")
-def user_logout():
-    logout_user()
-    return render_template('User/login.html')
-
-
 @app.route("/")
 def index():
     return render_template("User/home.html")
@@ -157,6 +152,11 @@ def doctors():
     return render_template("User/doctors.html", kw=kw, specialty_id=specialty_id,
                            hospital_id=hospital_id, doctors=doctors, degree=degree, specialties=specialties,
                            hospitals=hospitals)
+@app.route('/doctors/<int:doctor_id>')
+def doctor_detail(doctor_id):
+    doctor = dao.get_doctor_by_id(doctor_id)
+
+    return render_template("User/doctor_detail.html", doctor=doctor)
 
 #Nguyen lm
 # @app.route('/appointments-doctor')
@@ -383,5 +383,60 @@ def patient_record_detail(appointment_id):
 
     return render_template('Doctor/patient_record_detail.html', record=record)
 
-if "__main__" == __name__:
+from datetime import datetime
+
+@app.route("/admin/revenue_weekly")
+def revenue_weekly():
+    year = request.args.get("year", type=int)
+    week = request.args.get("week", type=int)
+
+    # Nếu không truyền thì mặc định là tuần hiện tại
+    if not year or not week:
+        today = datetime.now()
+        iso = today.isocalendar()  # (year, week_number, weekday)
+        year, week = iso[0], iso[1]
+
+    result = dao.get_weekly_revenue(year, week)
+
+    # Tính ra ngày đầu tuần (Monday)
+    monday = datetime.strptime(f"{year}-W{week}-1", "%G-W%V-%u")
+
+    # Build dữ liệu cho 7 ngày (Mon → Sun)
+    data = []
+    for i in range(7):
+        day = monday + timedelta(days=i)
+        found = next((r.total for r in result if r.date == day.date()), 0)
+        data.append({"date": day.strftime("%d/%m/%Y"), "total": found})
+
+    return render_template("Admin/revenue_weekly.html", data=data, year=year, week=week)
+
+@app.route("/admin/revenue_monthly")
+def revenue_monthly():
+    year = request.args.get("year", datetime.now().year, type=int)
+    month = request.args.get("month", datetime.now().month, type=int)
+
+    labels, data = dao.get_monthly_revenue(year, month)
+
+    return render_template(
+        "Admin/revenue_monthly.html",
+        labels=labels,
+        data=data,
+        selected_year=year,
+        selected_month=month
+    )
+
+@app.route("/admin/revenue_yearly")
+def revenue_yearly():
+    year = request.args.get("year", datetime.now().year, type=int)
+
+    labels, data = dao.get_yearly_revenue(year)
+
+    return render_template(
+        "Admin/revenue_yearly.html",
+        labels=labels,
+        data=data,
+        selected_year=year
+    )
+
+if __name__  == "__main__"  :
     app.run(debug=True,port=8080)

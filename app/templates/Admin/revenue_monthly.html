@@ -1,10 +1,53 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <title>$Title$</title>
-</head>
-<body>
-$END$
-</body>
-</html>
+{% extends "layout/base_admin.html" %}
+
+{% block title %}
+<title>Báo cáo doanh thu theo tháng</title>
+{% endblock %}
+
+
+{% block content %}
+<div class="container mt-4">
+  <h2>Doanh thu theo tháng</h2>
+  <form method="get" action="{{ url_for('revenue_monthly') }}" class="mb-4 row g-2">
+    <div class="col-auto">
+      <select name="month" class="form-select">
+        {% for m in range(1, 13) %}
+        <option value="{{ m }}" {% if m == selected_month %}selected{% endif %}>Tháng {{ m }}</option>
+        {% endfor %}
+      </select>
+    </div>
+    <div class="col-auto">
+      <input type="number" name="year" value="{{ selected_year }}" class="form-control"/>
+    </div>
+    <div class="col-auto">
+      <button type="submit" class="btn btn-primary">Xem</button>
+    </div>
+  </form>
+
+  <canvas id="monthlyChart" height="100"></canvas>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script>
+  const ctx = document.getElementById('monthlyChart').getContext('2d');
+  const chart = new Chart(ctx, {
+    type: 'bar',
+    data: {
+      labels: {{ labels|tojson }},
+      datasets: [{
+        label: 'Doanh thu (VND)',
+        data: {{ data|tojson }},
+        backgroundColor: 'rgba(54, 162, 235, 0.6)',
+        borderWidth: 1
+      }]
+    },
+    options: {
+      scales: {
+        y: { beginAtZero: true }
+      }
+    }
+  });
+</script>
+{% endblock %}
