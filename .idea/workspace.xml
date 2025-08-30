@@ -5,12 +5,16 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="36e6bc4c-4878-48d7-8851-3b7f8b23dfd9" name="Changes" comment="">
+      <change afterPath="$PROJECT_DIR$/app/static/js/list_appt_user.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/templates/User/list_appt.html" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/app/dao.py" beforeDir="false" afterPath="$PROJECT_DIR$/app/dao.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/app/index.py" beforeDir="false" afterPath="$PROJECT_DIR$/app/index.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/models.py" beforeDir="false" afterPath="$PROJECT_DIR$/app/models.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/templates/Layout/base_admin.html" beforeDir="false" afterPath="$PROJECT_DIR$/app/templates/Layout/base_admin.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/templates/User/doctors.html" beforeDir="false" afterPath="$PROJECT_DIR$/app/templates/User/doctors.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/static/js/list_appt.js" beforeDir="false" afterPath="$PROJECT_DIR$/app/static/js/list_appt.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/templates/Doctor/list_appt.html" beforeDir="false" afterPath="$PROJECT_DIR$/app/templates/Doctor/list_appt.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/templates/Layout/header.html" beforeDir="false" afterPath="$PROJECT_DIR$/app/templates/Layout/header.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/templates/schedule.html" beforeDir="false" afterPath="$PROJECT_DIR$/app/templates/schedule.html" afterDir="false" />
+
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -26,6 +30,11 @@
     </option>
   </component>
   <component name="Git.Settings">
+    <option name="RECENT_BRANCH_BY_REPOSITORY">
+      <map>
+        <entry key="$PROJECT_DIR$" value="TQN-Module-Schedule-Appointment" />
+      </map>
+    </option>
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
   </component>
   <component name="GitHubPullRequestSearchHistory">{
@@ -48,6 +57,7 @@
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
+
   <component name="PropertiesComponent">{
   &quot;keyToString&quot;: {
     &quot;DefaultHtmlFileTemplate&quot;: &quot;HTML File&quot;,
@@ -161,9 +171,9 @@
       <method v="2" />
     </configuration>
     <list>
-      <item itemvalue="Python.models (1)" />
       <item itemvalue="Python.dao" />
       <item itemvalue="Python.index" />
+      <item itemvalue="Python.models (1)" />
       <item itemvalue="Python.models" />
     </list>
     <recent_temporary>

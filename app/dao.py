@@ -1,6 +1,8 @@
 # import data,json
-from app.models import Specialty, Doctor, Hospital, AppointmentSchedule, AppointmentScheduleStatus, Patient
+from app.models import Specialty, Doctor, Hospital, AppointmentSchedule, AppointmentScheduleStatus, Patient, \
+    DoctorSchedule, Review
 from sqlalchemy import or_, func
+from flask_login import current_user
 from app.models import Specialty, Doctor, Hospital, AppointmentSchedule, AppointmentScheduleStatus, Patient, Payment, PaymentStatus, User
 from sqlalchemy import or_, func, extract
 from sqlalchemy.orm import joinedload
@@ -134,6 +136,70 @@ def load_hospital():
 #             if u["username"]==username and u["password"]== password:
 #                 return True
 #     return False
+def find_by_doctor_id_schedule_doctor(doctor_id):
+    return DoctorSchedule.query.filter(DoctorSchedule.doctor_id.__eq__(doctor_id)).first()
+
+def find_by_hos_id_and_specialties_id_doctor(hospital_id, specialty_id):
+    return Doctor.query.filter(Doctor.hospital_id.__eq__(hospital_id),Doctor.specialty_id.__eq__(specialty_id)).all()
+
+def find_all_specialty():
+    return Specialty.query.all()
+
+def find_appt_join_patient_doctor(doctor_id, page=None):
+    query= AppointmentSchedule.query \
+    .options(joinedload(AppointmentSchedule.patient),
+             joinedload(AppointmentSchedule.doctor)) \
+    .filter(
+    AppointmentSchedule.doctor_id.__eq__(doctor_id),
+    AppointmentSchedule.status.__eq__(AppointmentScheduleStatus.ACCEPT))
+
+    if page:
+        page_size = 3
+        start = (int(page) - 1) * page_size
+        query = query.slice(start, start + page_size)
+
+    return query.all()
+
+def find_appt_join_patient_doctor_booked_by(booked_by, page=None):
+    query= AppointmentSchedule.query \
+    .options(joinedload(AppointmentSchedule.patient),
+             joinedload(AppointmentSchedule.doctor)) \
+    .filter(
+    AppointmentSchedule.booked_by.__eq__(booked_by),
+    AppointmentSchedule.status.__eq__(AppointmentScheduleStatus.ACCEPT))
+
+    if page:
+        page_size = 3
+        start = (int(page) - 1) * page_size
+        query = query.slice(start, start + page_size)
+
+    return query.all()
+
+def change_status_cancel(appt_id):
+    a= AppointmentSchedule.query.filter(AppointmentSchedule.id.__eq__(appt_id)).first()
+    a.status = AppointmentScheduleStatus.CANCEL
+    db.session.commit()
+
+def count_appt():
+    return AppointmentSchedule.query.count()
+
+def get_doctor(doctor_id):
+    return Doctor.query \
+        .options(joinedload(Doctor.hospital),
+                 joinedload(Doctor.specialty)) \
+        .filter(
+        Doctor.id.__eq__(doctor_id)
+    ).first()
+def get_comments(doctor_id):
+    return Review.query.filter(Review.doctor_id.__eq__(doctor_id)).order_by(-Review.id)
+
+
+def add_comment(content, doctor_id):
+    c = Review(comment=content, doctor_id=doctor_id, user_review=current_user,star=5)
+    db.session.add(c)
+    db.session.commit()
+
+    return c
 #     return False
 
 def get_weekly_revenue(year=None, week=None):
