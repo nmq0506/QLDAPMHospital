@@ -30,8 +30,8 @@
       <!-- Nếu chưa đăng nhập -->
       {% if not current_user.is_authenticated %}
         <div class="d-flex gap-2">
-          <a href="/login" class="btn btn-outline-primary">Đăng nhập</a>
-          <a href="/register" class="btn btn-primary">Đăng ký</a>
+          <a href="/user/login" class="btn btn-outline-primary">Đăng nhập</a>
+          <a href="/user/register" class="btn btn-primary">Đăng ký</a>
         </div>
       {% else %}
         <!-- Nếu đã đăng nhập -->

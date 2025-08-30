@@ -154,6 +154,12 @@ def doctors():
                            hospital_id=hospital_id, doctors=doctors, degree=degree, specialties=specialties,
                            hospitals=hospitals)
 
+@app.route("/admin/table-list-doctor")
+def get_doctor():
+    return render_template('Admin/list_doctor.html', user = utils.get_doctor());
+@app.route("/admin/table-list-user")
+def get_user():
+    return render_template('Admin/list_user.html', user = utils.get_user());
 
 if "__main__" == __name__:
     app.run(debug=True, port=8080)
