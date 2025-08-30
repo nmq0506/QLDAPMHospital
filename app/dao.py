@@ -1,4 +1,6 @@
 # import data,json
+from app.models import Specialty, Doctor, Hospital, AppointmentSchedule, AppointmentScheduleStatus, Patient
+from sqlalchemy import or_, func
 from app.models import Specialty, Doctor, Hospital, AppointmentSchedule, AppointmentScheduleStatus, Patient, Payment, PaymentStatus
 from sqlalchemy import or_, func, extract
 from sqlalchemy.orm import joinedload
@@ -25,7 +27,6 @@ def get_doctors(kw=None, spec_id=None, hospital_id=None, degree=None):
 
 def get_doctor_by_id(doctor_id):
     return Doctor.query.get(doctor_id)
-
 def load_hospital():
     return Hospital.query.all()
 
@@ -132,6 +133,7 @@ def load_hospital():
 #         for u in users:
 #             if u["username"]==username and u["password"]== password:
 #                 return True
+#     return False
 #     return False
 
 def get_weekly_revenue(year=None, week=None):
