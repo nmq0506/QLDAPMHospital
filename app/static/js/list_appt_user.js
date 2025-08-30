@@ -22,6 +22,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
             function handleApiCall(button, url) {
 
+
                 const card = button.closest('.appointment-card');
                 fetch(url)
                     .then(response => {
@@ -54,7 +55,21 @@ document.addEventListener('DOMContentLoaded', function() {
             document.querySelectorAll('.btn-cancel').forEach(button => {
                 button.addEventListener('click', function() {
                     const apptId = this.dataset.id;
-                    const url = `/change-status/${apptId}`;
+                     const apptDate = new Date(this.dataset.date);
+                    const now = new Date();
+
+                    const diffHours = (apptDate - now) / (1000 * 60 * 60);
+
+                if (diffHours < 24) {
+                    Swal.fire(
+                    'Không thể hủy!',
+                    'Bạn chỉ được hủy lịch trước ít nhất 24h.',
+                    'warning'
+                    );
+                    return;
+        }
+
+                    const url = `change-status-appt-user/${apptId}`;
                     showConfirmDialog(
                         'Xác nhận hủy lịch',
                         'Bạn có chắc chắn muốn hủy lịch hẹn này không?',
@@ -62,19 +77,4 @@ document.addEventListener('DOMContentLoaded', function() {
                     );
                 });
             });
-
-
-            document.querySelectorAll('.btn-complete').forEach(button => {
-                button.addEventListener('click', function() {
-                    const apptId = this.dataset.id;
-                    const url = `/complete-appointment/${apptId}`;
-                    showConfirmDialog(
-                        'Xác nhận hoàn thành',
-                        'Bạn có muốn đánh dấu lịch hẹn này là đã hoàn thành không?',
-                        () => handleApiCall(this, url)
-                    );
-                });
-            });
-
-        });
 

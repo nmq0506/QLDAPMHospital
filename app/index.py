@@ -410,6 +410,17 @@ def add_comment(id):
         'avatar': "https://res-console.cloudinary.com/dieiwsp2i/thumbnails/v1/image/upload/v1749404808/cm5iamdqYW5veXFwbXRxZnlwNjk=/drilldown"
     }})
 
+@app.route("/list-appt-user")
+def list_appp_user():
+    page = request.args.get('page')
+    list_appt= dao.find_appt_join_patient_doctor_booked_by(current_user.id,page=page)
+    return render_template("User/list_appt.html",list_appt=list_appt,pages=math.ceil(dao.count_appt()/3 ))
+
+@app.route("/change-status-appt-user/<int:appt_id>")
+def change_status_cancel_user(appt_id):
+    dao.change_status_cancel(appt_id)
+    list_appt = dao.find_appt_join_patient_doctor_booked_by(current_user.id)
+    return render_template("User/list_appt.html",list_appt=list_appt,pages=math.ceil(dao.count_appt()/3 ))
 
 if "__main__" == __name__:
     app.run(debug=True,port=8080)

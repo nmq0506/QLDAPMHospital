@@ -157,6 +157,21 @@ def find_appt_join_patient_doctor(doctor_id, page=None):
 
     return query.all()
 
+def find_appt_join_patient_doctor_booked_by(booked_by, page=None):
+    query= AppointmentSchedule.query \
+    .options(joinedload(AppointmentSchedule.patient),
+             joinedload(AppointmentSchedule.doctor)) \
+    .filter(
+    AppointmentSchedule.booked_by.__eq__(booked_by),
+    AppointmentSchedule.status.__eq__(AppointmentScheduleStatus.ACCEPT))
+
+    if page:
+        page_size = 3
+        start = (int(page) - 1) * page_size
+        query = query.slice(start, start + page_size)
+
+    return query.all()
+
 def change_status_cancel(appt_id):
     a= AppointmentSchedule.query.filter(AppointmentSchedule.id.__eq__(appt_id)).first()
     a.status = AppointmentScheduleStatus.CANCEL
@@ -182,3 +197,4 @@ def add_comment(content, doctor_id):
     db.session.commit()
 
     return c
+
