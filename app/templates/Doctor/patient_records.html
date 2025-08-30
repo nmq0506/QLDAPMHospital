@@ -1,0 +1,52 @@
+{% extends 'layout/base.html' %}
+
+{% block title %}
+<title>Hồ sơ bệnh nhân</title>
+{% endblock %}
+
+{% block content %}
+<div class="container mt-4">
+    <h2>Danh sách hồ sơ bệnh nhân</h2>
+    <table class="table table-striped table-bordered mt-3">
+        <thead>
+            <tr>
+                <th>Tên bệnh nhân</th>
+                <th>Tuổi</th>
+                <th>Email</th>
+                <th>Số điện thoại</th>
+                <th>Trạng thái lịch hẹn</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for record in patient_profiles %}
+            <tr>
+                <td>
+                    <a href="{{ url_for('patient_record_detail', appointment_id=record.appointment_id) }}">
+                        {{ record.patient_name }}
+                    </a>
+                </td>
+                <td>{{ record.age }}</td>
+                <td>{{ record.email }}</td>
+                <td>{{ record.phone }}</td>
+                <td>
+                    {% if record.appointment_status.name == 'PENDING' %}
+                        Chưa duyệt
+                    {% elif record.appointment_status.name == 'ACCEPT' %}
+                        Đã khám
+                    {% elif record.appointment_status.name == 'CANCEL' %}
+                        Đã hủy
+                    {% else %}
+                        {{ record.appointment_status }}
+                    {% endif %}
+                </td>
+
+            </tr>
+            {% else %}
+            <tr>
+                <td colspan="5" class="text-center">Không có hồ sơ nào</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+{% endblock %}

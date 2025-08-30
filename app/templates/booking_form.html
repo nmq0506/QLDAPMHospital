@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Book an Appointment</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/booking.css') }}">
+    <script type="module" src="{{ url_for('static', filename='js/booking_form.js') }}"></script>
+</head>
+<body>
+
+<h1>Đặt lịch khám 🗓️</h1>
+
+<form action="{{ url_for('book_appointment') }}" method="POST">
+
+    <div class="form-group">
+        <label for="hospital-select">Chọn nơi khám:</label>
+        <select name="hospital" id="hospital-select" required>
+            <option value="">---Chọn nơi khám---</option>
+            {% for hospital in hospitals %}
+            <option value="{{ hospital.id }}">{{ hospital.name }}</option>
+            {% endfor %}
+        </select>
+    </div>
+
+    <div class="form-group">
+        <label for="doctor-select">Chọn bác sĩ:</label>
+        <select name="doctor" id="doctor-select" required >
+            <option value="">---Chọn bác sĩ---</option>
+        </select>
+    </div>
+
+    <div class="form-group">
+        <label for="patient-name">Bệnh nhân:</label>
+        <input placeholder="Chỉ cần nhập tên của người thân hay của bạn " type="text" id="patient-name"
+               name="patient_name" required>
+    </div>
+
+    <div class="form-group">
+        <label for="appointment-date">Chọn ngày:</label>
+        <input type="date" id="appointment-date" name="appointment_date" required disabled>
+    </div>
+
+    <div class="form-group">
+        <label>Chọn giờ:</label>
+        <div id="time-slots-container">
+            <p>Chọn bác sĩ và chọn ngày trước</p>
+        </div>
+    </div>
+
+    <div class="form-group">
+        <label for="symptoms">Triệu chứng:</label>
+        <textarea id="symptoms" name="symptoms" rows="4"></textarea>
+    </div>
+
+    <button type="submit" class="submit-btn">Đặt lịch</button>
+</form>
+
+<script src="{{ url_for('static', filename='js/booking.js') }}"></script>
+</body>
+<script>
+
+
+
+</script>
+</html>

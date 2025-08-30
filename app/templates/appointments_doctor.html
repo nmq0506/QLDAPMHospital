@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Lịch hẹn bác sĩ</title>
+</head>
+<body>
+<h1>Lịch hẹn của bác sĩ</h1>
+
+{% if appointments_doctor %}
+{% for a in appointments_doctor %}
+<div style="border: 1px solid #ccc; padding: 15px; margin-bottom: 20px;">
+    <p><strong>Phòng:</strong> {{ a.room }}</p>
+    <p><strong>Ngày hẹn:</strong> {{ a.date.strftime('%d/%m/%Y %H:%M') }}</p>
+    <p><strong>Trạng thái:</strong> {{ a.status.value }}</p>
+    <p><strong>Ghi chú:</strong> {{ a.note or 'Không có' }}</p>
+    <p><strong>Bệnh nhân:</strong> {{ a.patient.name }}</p>
+</div>
+<form action="{{ url_for('update_accept_doctor', appointment_id=a.id) }}" method="post">
+    <button type="submit">Chấp nhận</button>
+</form>
+
+{% endfor %}
+{% else %}
+<p>Không có lịch hẹn nào.</p>
+{% endif %}
+</body>
+</html>
+<script>
+    function respone() {
+
+    }
+</script>
