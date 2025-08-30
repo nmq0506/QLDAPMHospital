@@ -2,6 +2,8 @@ import math
 
 from flask import render_template, jsonify, url_for, redirect, flash, request
 from flask_login import login_user, logout_user, current_user, login_required
+from app import app, dao,utils,login
+from app.models import *
 
 from flask_login import login_user, logout_user
 from fontTools.misc.plistlib import end_date
@@ -66,6 +68,10 @@ def admin_home():
 @login.user_loader
 def load_user(user_id):
     return utils.get_user_by_id(user_id)
+@app.route("/user/logout")
+def user_logout():
+    logout_user()
+    return redirect('/user/login')
 
 
 @app.route("/user/register", methods=['get', 'post'])
@@ -125,16 +131,11 @@ def doctor_register():
     return render_template('Admin/doctor_register.html', err_msg=err_msg)
 
 
-@app.route("/user/logout")
-def user_logout():
-    logout_user()
-    return render_template('User/login.html')
-
-
 @app.route("/")
 def index():
     # return render_template("Doctor/home_schedule_doctor.html")
     return render_template("User/home.html")
+
 
 @app.route('/specialties')
 def specialties():
@@ -156,6 +157,18 @@ def doctors():
                            hospital_id=hospital_id, doctors=doctors, degree=degree, specialties=specialties,
                            hospitals=hospitals)
 
+@app.route('/doctors/<int:doctor_id>')
+def doctor_detail(doctor_id):
+    doctor = dao.get_doctor_by_id(doctor_id)
+
+    return render_template("User/doctor_detail.html", doctor=doctor)
+
+@app.route("/admin/table-list-doctor")
+def get_doctor():
+    return render_template('Admin/list_doctor.html', user = utils.get_doctor());
+@app.route("/admin/table-list-user")
+def get_user():
+    return render_template('Admin/list_user.html', user = utils.get_user());
 #Nguyen lm
 # @app.route('/appointments-doctor')
 @app.route("/schedule-doctor/<int:doctor_id>/<string:date_str>")
@@ -421,6 +434,119 @@ def change_status_cancel_user(appt_id):
     dao.change_status_cancel(appt_id)
     list_appt = dao.find_appt_join_patient_doctor_booked_by(current_user.id)
     return render_template("User/list_appt.html",list_appt=list_appt,pages=math.ceil(dao.count_appt()/3 ))
+
+@app.route('/patient_records', methods=['GET'])
+@login_required
+def patient_records():
+    if current_user.user_role != UserRole.DOCTOR:
+        flash("Bạn không có quyền truy cập", "danger")
+        return redirect(url_for('index'))
+
+    doctor_id = current_user.id
+    patient_profiles = (
+        db.session.query(
+            AppointmentSchedule.id.label("appointment_id"),
+            Patient.name.label("patient_name"),
+            Patient.age,
+            Patient.email,
+            Patient.phone,
+            AppointmentSchedule.status.label("appointment_status")
+        )
+        .join(Patient, AppointmentSchedule.patient_id == Patient.id)
+        .filter(AppointmentSchedule.doctor_id == doctor_id)
+        .all()
+    )
+
+    return render_template(
+        'Doctor/patient_records.html',
+        patient_profiles=patient_profiles
+    )
+
+@app.route('/patient_records/<int:appointment_id>', methods=['GET'])
+@login_required
+def patient_record_detail(appointment_id):
+    if current_user.user_role != UserRole.DOCTOR:
+        flash("Bạn không có quyền truy cập", "danger")
+        return redirect(url_for('index'))
+
+    doctor_id = current_user.id
+    record = (
+        db.session.query(
+            AppointmentSchedule.id.label("appointment_id"),
+            Patient.name.label("patient_name"),
+            Patient.age,
+            Patient.phone,
+            Patient.email,
+            ProfilePatient.symptom,
+            ProfilePatient.diagnose,
+            ProfilePatient.test_result,
+            ProfilePatient.medical_history
+        )
+        .join(Patient, AppointmentSchedule.patient_id == Patient.id)
+        .outerjoin(ProfilePatient, ProfilePatient.patient_id == Patient.id)
+        .filter(AppointmentSchedule.id == appointment_id)
+        .filter(AppointmentSchedule.doctor_id == doctor_id)
+        .first()
+    )
+
+    if not record:
+        flash("Không tìm thấy hồ sơ hoặc bạn không có quyền", "warning")
+        return redirect(url_for('patient_records'))
+
+    return render_template('Doctor/patient_record_detail.html', record=record)
+
+@app.route("/admin/revenue_weekly")
+def revenue_weekly():
+    year = request.args.get("year", type=int)
+    week = request.args.get("week", type=int)
+
+    # Nếu không truyền thì mặc định là tuần hiện tại
+    if not year or not week:
+        today = datetime.now()
+        iso = today.isocalendar()  # (year, week_number, weekday)
+        year, week = iso[0], iso[1]
+
+    result = dao.get_weekly_revenue(year, week)
+
+    # Tính ra ngày đầu tuần (Monday)
+    monday = datetime.strptime(f"{year}-W{week}-1", "%G-W%V-%u")
+
+    # Build dữ liệu cho 7 ngày (Mon → Sun)
+    data = []
+    for i in range(7):
+        day = monday + timedelta(days=i)
+        found = next((r.total for r in result if r.date == day.date()), 0)
+        data.append({"date": day.strftime("%d/%m/%Y"), "total": found})
+
+    return render_template("Admin/revenue_weekly.html", data=data, year=year, week=week)
+
+@app.route("/admin/revenue_monthly")
+def revenue_monthly():
+    year = request.args.get("year", datetime.now().year, type=int)
+    month = request.args.get("month", datetime.now().month, type=int)
+
+    labels, data = dao.get_monthly_revenue(year, month)
+
+    return render_template(
+        "Admin/revenue_monthly.html",
+        labels=labels,
+        data=data,
+        selected_year=year,
+        selected_month=month
+    )
+
+@app.route("/admin/revenue_yearly")
+def revenue_yearly():
+    year = request.args.get("year", datetime.now().year, type=int)
+
+    labels, data = dao.get_yearly_revenue(year)
+
+    return render_template(
+        "Admin/revenue_yearly.html",
+        labels=labels,
+        data=data,
+        selected_year=year
+    )
 
 if "__main__" == __name__:
     app.run(debug=True,port=8080)

@@ -42,7 +42,7 @@
     <ul class="navbar-nav bg-gradient-primary sidebar sidebar-dark accordion" id="accordionSidebar">
 
         <!-- Sidebar - Brand -->
-        <a class="sidebar-brand d-flex align-items-center justify-content-center" href="/admin_stats">
+        <a class="sidebar-brand d-flex align-items-center justify-content-center" href="/admin/home">
             <div class="sidebar-brand-icon rotate-n-15">
                 <i class="fas fa-laugh-wink"></i>
             </div>
@@ -71,12 +71,13 @@
             <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapsePages"
                aria-expanded="true" aria-controls="collapsePages">
                 <i class="fas fa-fw fa-folder"></i>
-                <span>Bác sĩ</span>
+                <span>Quản lý trang</span>
             </a>
             <div id="collapsePages" class="collapse" aria-labelledby="headingPages" data-parent="#accordionSidebar">
                 <div class="bg-white py-2 collapse-inner rounded">
-                    <h6 class="collapse-header">Bác sĩ</h6>
-                    <a class="collapse-item" href="/admin_stats/table-list-employee">Xem DS bác sĩ</a>
+                    <h6 class="collapse-header">Quản lý số lượng</h6>
+                    <a class="collapse-item" href="/admin/table-list-user">Xem DS bệnh nhân</a>
+                    <a class="collapse-item" href="/admin/table-list-doctor">Xem DS bác sĩ</a>
                     <a class="collapse-item" href="/doctor/register">Tạo tài khoản cho bác sĩ</a>
                 </div>
             </div>
@@ -92,49 +93,12 @@
             <div id="collapseTwo" class="collapse" aria-labelledby="headingTwo" data-parent="#accordionSidebar">
                 <div class="bg-white py-2 collapse-inner rounded">
                     <h6 class="collapse-header">Loại báo cáo:</h6>
-                    <a class="collapse-item" href="">Báo cáo doanh thu</a>
-                    <a class="collapse-item" href="">Báo cáo hàng tồn kho</a>
+                    <a class="collapse-item" href="/admin/revenue_weekly">Doanh thu theo tuần</a>
+                    <a class="collapse-item" href="/admin/revenue_monthly">Doanh thu theo tháng</a>
+                    <a class="collapse-item" href="/admin/revenue_yearly">Doanh thu theo năm</a>
                 </div>
             </div>
         </li>
-
-        <!-- Nav Item - Tables -->
-        <li class="nav-item">
-            <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapseUtilities"
-               aria-expanded="true" aria-controls="collapseUtilities">
-                <i class="fas fa-fw fa-table"></i>
-                <span>Bảng</span>
-            </a>
-            <div id="collapseUtilities" class="collapse" aria-labelledby="headingUtilities"
-                 data-parent="#accordionSidebar">
-                <div class="bg-white py-2 collapse-inner rounded">
-                    <h6 class="collapse-header">Loại báo cáo:</h6>
-                    <a class="collapse-item" href="/admin_stats/table-revenue">Báo cáo doanh thu</a>
-                    <a class="collapse-item" href="/admin_stats/table-inventory">Báo cáo hàng tồn kho</a>
-                </div>
-            </div>
-        </li>
-        <hr class="sidebar-divider">
-
-        <!-- Heading -->
-        <div class="sidebar-heading">Quản lý</div>
-
-        <li class="nav-item">
-            <a class="nav-link" href="/admin">
-                <i class="fa-solid fa-chart-simple"></i>
-                <span>Quản lý</span></a>
-            <a class="nav-link" href="/admin_stats/send-order">
-               <i class="fa-solid fa-location-arrow"></i>
-                <span>Gửi đơn đặt hàng</span></a>
-        </li>
-
-        <!-- Divider -->
-        <hr class="sidebar-divider d-none d-md-block">
-
-        <!-- Sidebar Toggler (Sidebar) -->
-        <div class="text-center d-none d-md-inline">
-            <button class="rounded-circle border-0" id="sidebarToggle"></button>
-        </div>
 
 
     </ul>

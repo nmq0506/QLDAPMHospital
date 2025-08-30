@@ -1,0 +1,24 @@
+{% extends "layout/base.html" %}
+
+{% block title %}
+<title>Chi tiết hồ sơ bệnh nhân</title>
+{% endblock %}
+
+{% block content %}
+<div class="container my-4">
+    <h2 class="mb-4">Chi tiết hồ sơ bệnh nhân</h2>
+
+    <div class="card p-3">
+        <h4>{{ record.patient_name }} ({{ record.age }} tuổi)</h4>
+        <p><strong>Điện thoại:</strong> {{ record.phone or "-" }}</p>
+        <p><strong>Email:</strong> {{ record.email or "-" }}</p>
+        <hr>
+        <p><strong>Triệu chứng:</strong> {{ record.symptom or "-" }}</p>
+        <p><strong>Chẩn đoán:</strong> {{ record.diagnose or "-" }}</p>
+        <p><strong>Kết quả xét nghiệm:</strong> {{ record.test_result or "-" }}</p>
+        <p><strong>Bệnh sử:</strong> {{ record.medical_history or "-" }}</p>
+    </div>
+
+    <a href="{{ url_for('patient_records') }}" class="btn btn-secondary mt-3">Quay lại</a>
+</div>
+{% endblock %}

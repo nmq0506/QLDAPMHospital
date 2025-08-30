@@ -82,6 +82,11 @@ class Doctor(db.Model):
     @property
     def name(self):
         return self.user.name if self.user else None
+      
+    @property
+    def certificate_label(self):
+        return self.certificate.value if self.certificate else ""
+
 
 class DoctorSchedule(db.Model):
     id = Column(Integer, primary_key=True, autoincrement=True)
