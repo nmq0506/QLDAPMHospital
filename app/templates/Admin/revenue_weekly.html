@@ -1,10 +1,94 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <title>$Title$</title>
-</head>
-<body>
-$END$
-</body>
-</html>
+
+{% extends "layout/base_admin.html" %}
+
+{% block title %}
+<title>Báo cáo doanh thu theo tuần</title>
+{% endblock %}
+
+{% block content %}
+<div class="container mt-4">
+    <h2 class="mb-4 text-center">Báo cáo doanh thu tuần {{ week }} - {{ year }}</h2>
+
+    <!-- Form chọn tuần -->
+    <form method="get" action="{{ url_for('revenue_weekly') }}" class="row g-3 mb-4">
+        <div class="col-md-4">
+            <label for="week" class="form-label">Chọn tuần</label>
+            <input type="week" id="week" name="week_input" class="form-control" required>
+        </div>
+        <div class="col-md-2 d-flex align-items-end">
+            <button type="submit" class="btn btn-primary">Xem</button>
+        </div>
+    </form>
+
+    <!-- Biểu đồ -->
+    <div class="card shadow-sm">
+        <div class="card-body">
+            <canvas id="weeklyChart" height="120"></canvas>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<!-- Chart.js -->
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script>
+    // Dữ liệu từ Flask
+    const labels = {{ data|map(attribute="date")|list|tojson }};
+    const totals = {{ data|map(attribute="total")|list|tojson }};
+
+    const ctx = document.getElementById('weeklyChart').getContext('2d');
+    new Chart(ctx, {
+        type: 'bar',
+        data: {
+            labels: labels,
+            datasets: [{
+                label: 'Doanh thu (VND)',
+                data: totals,
+                backgroundColor: 'rgba(54, 162, 235, 0.7)',
+                borderColor: 'rgba(54, 162, 235, 1)',
+                borderWidth: 1,
+                borderRadius: 6
+            }]
+        },
+        options: {
+            responsive: true,
+            plugins: {
+                legend: { display: false },
+                tooltip: {
+                    callbacks: {
+                        label: function(context) {
+                            return context.raw.toLocaleString("vi-VN") + " đ";
+                        }
+                    }
+                }
+            },
+            scales: {
+                x: {
+                    title: {
+                        display: true,
+                        text: 'Ngày trong tuần',
+                        font: { weight: 'bold' }
+                    }
+                },
+                y: {
+                    beginAtZero: true,
+                    title: {
+                        display: true,
+                        text: 'Doanh thu (VND)',
+                        font: { weight: 'bold' }
+                    },
+                    ticks: {
+                        callback: function(value) {
+                            return value.toLocaleString("vi-VN") + " đ";
+                        }
+                    }
+                }
+            }
+        }
+    });
+
+    // Giữ lại giá trị tuần đã chọn
+    document.getElementById("week").value = "{{ year }}-W{{ '%02d'|format(week) }}";
+</script>
+{% endblock %}
